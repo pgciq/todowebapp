@@ -29,6 +29,7 @@ import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.Task;
 import io.github.faimoh.todowebapp.dao.TaskDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import java.util.ArrayList;
 import javax.servlet.http.*;
 
@@ -44,7 +45,7 @@ public class UserTasksDashboardAction implements Action {
             throws Exception {
         Account sessionUser = (Account) request.getSession(false).getAttribute("account");
         try {
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             TaskDAO taskDAO = daoFactory.getTaskDAO();
             ArrayList<Task> tasksList = taskDAO.getAllTasks(sessionUser);
             request.setAttribute("tasksList", tasksList);

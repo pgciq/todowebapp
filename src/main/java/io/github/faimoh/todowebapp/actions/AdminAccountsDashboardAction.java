@@ -28,6 +28,7 @@ package io.github.faimoh.todowebapp.actions;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -43,7 +44,7 @@ public class AdminAccountsDashboardAction implements Action {
             throws Exception {
         //We believe the user is already logged in. We have an authentication filter in place for that.
         try {
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
             ArrayList<Account> accountsList = accountDAO.getAllAccounts();
             request.setAttribute("accountsList", accountsList);

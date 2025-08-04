@@ -27,6 +27,7 @@ package io.github.faimoh.todowebapp.actions;
 
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +64,7 @@ public class AdminCreateAccountAction implements Action {
             this.actionResponse.setViewPath("/WEB-INF/pages/admin/accounts/createAccountResult.jsp");
         } else {
             //First, check if the username is already taken.
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
             Account account = accountDAO.findAccount(username);
             boolean isUsernameTaken = account != null ? true : false;

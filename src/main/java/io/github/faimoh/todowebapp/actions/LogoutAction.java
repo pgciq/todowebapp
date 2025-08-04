@@ -28,6 +28,7 @@ package io.github.faimoh.todowebapp.actions;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.AccountSession;
 import javax.servlet.http.*;
@@ -58,7 +59,7 @@ public class LogoutAction implements Action {
             session.invalidate();
             
             accountSession.setSessionEnd(new java.sql.Timestamp(new Date().getTime()));
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountSessionDAO accountSessionDAO = daoFactory.getAccountSessionDAO();
             accountSessionDAO.updateAccountSession(accountSession);
             this.actionResponse.setMethod("redirect");

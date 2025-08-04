@@ -28,6 +28,7 @@ package io.github.faimoh.todowebapp.actions;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import javax.servlet.http.*;
 
 /**
@@ -51,7 +52,7 @@ public class AdminReadAccountDetailsAction implements Action {
                 request.setAttribute("message", message);
             } else {
                 int id = Integer.parseInt(stringID);
-                DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+                DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
                 AccountDAO accountDAO = daoFactory.getAccountDAO();
                 Account account = accountDAO.findAccount(id);
                 if (account == null) {

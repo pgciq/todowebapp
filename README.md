@@ -1,4 +1,44 @@
 # todowebapp
+
+## Quick Start
+
+**Development (H2 Database - Default):**
+```bash
+# Clone the repository
+git clone https://github.com/faimoh/todowebapp.git
+cd todowebapp
+
+# Build and run (uses H2 in-memory database)
+gradle tomcatRun
+
+# Access at: http://localhost:8080/todo
+# Default accounts: admin/admin123, user/user123
+```
+
+**Production (MySQL Database):**
+```bash
+# Setup MySQL database
+mysql -u root -p -e "CREATE DATABASE todo;"
+mysql -u root -p todo < src/main/resources/database/schema.sql
+
+# Configure for production
+gradle setupProd
+
+# Build production WAR
+gradle warProd
+
+# Deploy: build/libs/todo-prod-1.0.0.war
+```
+
+**Environment Management:**
+```bash
+gradle showConfig    # Show current database configuration
+gradle setupDev      # Switch to H2 development database  
+gradle setupProd     # Switch to MySQL production database
+```
+
+See [DATABASE-SETUP.md](src/main/resources/DATABASE-SETUP.md) for detailed configuration guide.
+
 ## Table of Contents
 [Introduction](https://github.com/faimoh/todowebapp#todowebapp)
 
@@ -39,12 +79,16 @@ This document is not for the newbies. You must possess good knowledge of below t
 Java  
 Servlet, JSP  
 Apache Tomcat  
-MySQL  
+MySQL (Production) / H2 (Development)
 HTML   
 Apache NetBeans IDE   
 Firefox
 
 This is entirely a back-end project. So, front-end technologies like CSS, JavaScript are not used. The aim of the project is to effectively learn and showcase how different pieces of the Java Servlet API work together.
+
+**Database Configuration:**
+- **Development**: H2 in-memory database (zero configuration, auto-initialization)
+- **Production**: MySQL database (persistent storage, production-grade)
 
 We shall develop the web application starting with requirements analysis. Then we shall move on to database design. Data is central to any web application. Almost all use cases deal with data. Once the web application's data model is ready, we shall then move on to design the architecture of the application. In this phase, we shall see how our application behaves to different HTTP actions. Because, all actions performed by the application's users are through HTTP. We shall think of all possible user actions and define them clearly. Next, we shall move on to designing the interfaces and classes.
 

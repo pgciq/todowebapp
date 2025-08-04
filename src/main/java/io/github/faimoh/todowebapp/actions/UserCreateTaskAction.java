@@ -28,6 +28,7 @@ package io.github.faimoh.todowebapp.actions;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.Task;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.dao.TaskDAO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,7 +85,7 @@ public class UserCreateTaskAction implements Action {
                     this.actionResponse.setMethod("forward");
                     this.actionResponse.setViewPath("/WEB-INF/pages/tasks/createTaskResult.jsp");
                 } else {
-                    DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+                    DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
                     TaskDAO taskDAO = daoFactory.getTaskDAO();
                     Task task = new Task();
                     task.setAccountID(sessionUser.getAccountID());

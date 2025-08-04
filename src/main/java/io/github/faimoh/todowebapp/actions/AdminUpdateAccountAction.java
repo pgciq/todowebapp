@@ -27,6 +27,7 @@ package io.github.faimoh.todowebapp.actions;
 
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +64,7 @@ public class AdminUpdateAccountAction implements Action {
             this.actionResponse.setMethod("forward");
             this.actionResponse.setViewPath("/WEB-INF/pages/admin/accounts/updateAccountResult.jsp");
         } else {
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
             Account accountToUpdate = accountDAO.findAccount(username);
             if (accountToUpdate == null) {

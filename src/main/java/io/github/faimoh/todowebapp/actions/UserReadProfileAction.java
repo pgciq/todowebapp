@@ -28,6 +28,7 @@ package io.github.faimoh.todowebapp.actions;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.AccountSession;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,7 @@ public class UserReadProfileAction implements Action {
         HttpSession session = request.getSession(false);
         Account sessionUser = (Account) session.getAttribute("account");
         try {
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
             Account account = accountDAO.findAccount(sessionUser.getAccountID());
             if (account == null) {

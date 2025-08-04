@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'war'
-    id 'com.bmuschko.tomcat' version '2.7.0'
+    id 'org.gretty' version '4.1.2'
 }
 
 group = 'io.github.faimoh'
@@ -35,16 +35,13 @@ dependencies {
     // MySQL Connector
     implementation 'mysql:mysql-connector-java:8.0.20'
     
+    // H2 Database for development
+    implementation 'com.h2database:h2:2.2.224'
+    
     // Test dependencies
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.6.1'
     testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
-    
-    // Tomcat plugin dependencies
-    def tomcatVersion = '9.0.65'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-           "org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6",
-           "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }
 
 // Project now uses standard Maven/Gradle directory structure:
@@ -85,21 +82,14 @@ task info {
     }
 }
 
-// Tomcat configuration
-tomcat {
+// Gretty configuration for development server
+gretty {
     httpPort = 8080
-    httpsPort = 8443
-    stopPort = 8005
-    stopKey = 'stopKey'
-    
-    // Configure context path
     contextPath = '/todo'
     
-    // Optional: Configure additional properties
-    // ajpPort = 8009
-    // enableSSL = true
-    // keystoreFile = file('path/to/keystore')
-    // keystorePass = 'password'
+    // Hot deployment support
+    reloadOnClassChange = false
+    reloadOnConfigChange = false
 }
 
 // Custom deployment tasks for external Tomcat
@@ -167,5 +157,112 @@ task redeployToTomcat {
     doLast {
         println "Application redeployed successfully"
         println "Access at: http://localhost:8080/todo"
+    }
+}
+
+// ============================================================================
+// ENVIRONMENT-SPECIFIC BUILD TASKS
+// ============================================================================
+
+// Task to build WAR for production with MySQL
+task warProd(type: War) {
+    archiveBaseName = 'todo-prod'
+    archiveVersion = project.version
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    // Use production context.xml
+    from('src/main/webapp') {
+        exclude 'META-INF/context.xml'
+    }
+    from('src/main/webapp/META-INF/context-prod.xml') {
+        into 'META-INF'
+        rename { 'context.xml' }
+    }
+}
+
+// Task to setup development environment (H2)
+task setupDev {
+    group = 'Environment'
+    description = 'Configure application for development environment (H2 database)'
+    doLast {
+        copy {
+            from 'src/main/webapp/META-INF/context-dev.xml'
+            into 'src/main/webapp/META-INF'
+            rename { 'context.xml' }
+        }
+        println "✓ Configured for development environment (H2 database)"
+        println "  - In-memory H2 database will be used"
+        println "  - Database will auto-initialize with sample data"
+        println "  - Run 'gradle tomcatRun' to start development server"
+    }
+}
+
+// Task to setup production environment (MySQL)
+task setupProd {
+    group = 'Environment'
+    description = 'Configure application for production environment (MySQL database)'
+    doLast {
+        copy {
+            from 'src/main/webapp/META-INF/context-prod.xml'
+            into 'src/main/webapp/META-INF'
+            rename { 'context.xml' }
+        }
+        println "✓ Configured for production environment (MySQL database)"
+        println "  - MySQL database will be used"
+        println "  - Ensure MySQL is running and database 'todo' exists"
+        println "  - Run database schema: src/main/resources/database/schema.sql"
+        println "  - Use 'gradle warProd' to build production WAR"
+    }
+}
+
+// Display current configuration
+task showConfig {
+    group = 'Environment'
+    description = 'Show current database configuration'
+    doLast {
+        def contextFile = file('src/main/webapp/META-INF/context.xml')
+        if (contextFile.exists()) {
+            def content = contextFile.text
+            if (content.contains('org.h2.Driver')) {
+                println "Current configuration: DEVELOPMENT (H2 Database)"
+                println "  - Database: In-memory H2"
+                println "  - Auto-initialization: Enabled"
+            } else if (content.contains('com.mysql.cj.jdbc.Driver')) {
+                println "Current configuration: PRODUCTION (MySQL Database)" 
+                println "  - Database: MySQL"
+                println "  - Host: localhost:3306"
+                println "  - Database: todo"
+            } else {
+                println "Current configuration: UNKNOWN"
+            }
+        } else {
+            println "No context.xml found - using default H2 configuration"
+        }
+    }
+}
+
+// Test H2 database setup
+task testH2 (type: JavaExec) {
+    group = 'Verification'
+    description = 'Test H2 database setup and initialization'
+    dependsOn compileTestJava
+    
+    mainClass = 'io.github.faimoh.todowebapp.H2DatabaseTest'
+    classpath = sourceSets.test.runtimeClasspath + sourceSets.main.runtimeClasspath
+    
+    // Add resources directory to classpath
+    systemProperty 'user.dir', project.projectDir
+}
+
+// Quick development server start
+task dev {
+    group = 'Development'
+    description = 'Start development server with H2 database'
+    dependsOn setupDev
+    doLast {
+        println "Development environment configured!"
+        println "Next step: Run 'gradle appRun' to start the server"
+        println "Server will be available at: http://localhost:8080/todo"
+        println "Using H2 in-memory database with sample data"
     }
 }

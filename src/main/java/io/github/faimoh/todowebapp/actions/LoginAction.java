@@ -27,6 +27,7 @@ package io.github.faimoh.todowebapp.actions;
 
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
 import io.github.faimoh.todowebapp.model.AccountSession;
 import io.github.faimoh.todowebapp.model.Account;
@@ -49,7 +50,7 @@ public class LoginAction implements Action {
             String context = request.getContextPath();
             String servlet = request.getServletPath();
 
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
             Account account = accountDAO.findAccount(username);
             System.out.println(this.getClass().getName() + ":" + account);

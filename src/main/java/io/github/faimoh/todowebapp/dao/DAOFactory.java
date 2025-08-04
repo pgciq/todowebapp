@@ -26,6 +26,7 @@
 package io.github.faimoh.todowebapp.dao;
 
 import io.github.faimoh.todowebapp.dao.mysql.MySQLDataSourceDAOFactory;
+import io.github.faimoh.todowebapp.dao.h2.H2DataSourceDAOFactory;
 
 /**
  *
@@ -35,6 +36,7 @@ public abstract class DAOFactory {
 
     public static final int MySQLDataSource = 1;
     public static final int MySQLDriverManager = 2;
+    public static final int H2DataSource = 3;
     
     public abstract AccountDAO getAccountDAO();
     public abstract TaskDAO getTaskDAO();    
@@ -44,6 +46,8 @@ public abstract class DAOFactory {
         switch (whichFactory) {
             case MySQLDataSource:
                 return MySQLDataSourceDAOFactory.getInstance();
+            case H2DataSource:
+                return H2DataSourceDAOFactory.getInstance();
             default:
                 return null;
         }

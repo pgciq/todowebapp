@@ -27,6 +27,7 @@ package io.github.faimoh.todowebapp.actions;
 
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
 import io.github.faimoh.todowebapp.model.AccountSession;
@@ -56,7 +57,7 @@ public class UserUpdateProfileAction implements Action {
         String servlet = request.getServletPath();
 
         Account sessionUser = (Account) request.getSession(false).getAttribute("account");
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MySQLDataSource);
+        DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
         AccountDAO accountDAO = daoFactory.getAccountDAO();        
 
         if (sessionUser == null) {
