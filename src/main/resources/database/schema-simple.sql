@@ -28,7 +28,7 @@ CREATE TABLE accounts (
     username VARCHAR(32) NOT NULL UNIQUE,
     first_name VARCHAR(32) NOT NULL,
     last_name VARCHAR(32) NOT NULL,
-    password VARCHAR(32) NOT NULL,
+    password VARCHAR(32) DEFAULT 'changeit',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     status_id INT NOT NULL DEFAULT 1,
     FOREIGN KEY (status_id) REFERENCES account_statuses(status_id)
