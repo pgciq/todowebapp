@@ -1,0 +1,171 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'com.bmuschko.tomcat' version '2.7.0'
+}
+
+group = 'io.github.faimoh'
+version = '1.0.0'
+description = 'Todo Web Application'
+
+// Java version configuration
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    // Use Aliyun mirrors for faster downloads in China
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://maven.aliyun.com/repository/central' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    // Fallback to Maven Central
+    mavenCentral()
+}
+
+dependencies {
+    // Servlet API (provided by container)
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    compileOnly 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    
+    // JSTL
+    implementation 'javax.servlet:jstl:1.2'
+    implementation 'org.apache.taglibs:taglibs-standard-impl:1.2.5'
+    
+    // MySQL Connector
+    implementation 'mysql:mysql-connector-java:8.0.20'
+    
+    // Test dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
+    testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
+    
+    // Tomcat plugin dependencies
+    def tomcatVersion = '9.0.65'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6",
+           "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+}
+
+// Project now uses standard Maven/Gradle directory structure:
+// - src/main/java (Java sources)
+// - src/main/resources (Configuration files)
+// - src/main/webapp (Web content)
+// - src/test/java (Test sources)
+// - src/test/resources (Test resources)
+
+// Configure WAR task
+war {
+    archiveBaseName = 'todo'
+    archiveVersion = project.version
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Task to copy dependencies to WEB-INF/lib (similar to Ant CopyLibs)
+task copyLibs(type: Copy) {
+    from configurations.runtimeClasspath
+    into 'build/libs/WEB-INF/lib'
+    exclude '**/servlet-api*.jar'
+    exclude '**/jsp-api*.jar'
+}
+
+// Make war task depend on copyLibs
+war.dependsOn copyLibs
+
+// Custom task to display project information
+task info {
+    description = 'Display project information'
+    group = 'help'
+    doLast {
+        println "Project: ${name}"
+        println "Version: ${version}"
+        println "Java Version: ${java.sourceCompatibility}"
+        println "Build Directory: ${buildDir}"
+        println "WAR File: todo-${version}.war"
+    }
+}
+
+// Tomcat configuration
+tomcat {
+    httpPort = 8080
+    httpsPort = 8443
+    stopPort = 8005
+    stopKey = 'stopKey'
+    
+    // Configure context path
+    contextPath = '/todo'
+    
+    // Optional: Configure additional properties
+    // ajpPort = 8009
+    // enableSSL = true
+    // keystoreFile = file('path/to/keystore')
+    // keystorePass = 'password'
+}
+
+// Custom deployment tasks for external Tomcat
+task deployToTomcat(type: Copy) {
+    description = 'Deploy WAR file to Tomcat webapps directory'
+    group = 'deployment'
+    
+    dependsOn war
+    
+    from war.archiveFile
+    into "${System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-9.0.107')}/webapps"
+    
+    // Remove version from WAR filename when deploying
+    rename { fileName ->
+        if (fileName.endsWith('.war')) {
+            return 'todo.war'
+        }
+        return fileName
+    }
+
+    doLast {
+        println "Deployed ${war.archiveFileName} as todo.war to Tomcat webapps directory"
+        println "Access the application at: http://localhost:8080/todo"
+    }
+}
+
+// Task to undeploy from Tomcat
+task undeployFromTomcat(type: Delete) {
+    description = 'Remove application from Tomcat webapps directory'
+    group = 'deployment'
+    
+    def tomcatHome = System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-9.0.107')
+    delete "${tomcatHome}/webapps/todo.war"
+    delete "${tomcatHome}/webapps/todo"
+    
+    doLast {
+        println "Removed todo from Tomcat webapps directory"
+    }
+}
+
+// Task to restart Tomcat (Windows)
+task restartTomcat {
+    description = 'Restart Tomcat service (Windows)'
+    group = 'deployment'
+    
+    doLast {
+        exec {
+            commandLine 'cmd', '/c', 'net stop Tomcat9 && net start Tomcat9'
+            ignoreExitValue = true
+        }
+        println "Tomcat service restarted"
+    }
+}
+
+// Combined deploy and restart task
+task redeployToTomcat {
+    description = 'Undeploy, deploy and restart Tomcat'
+    group = 'deployment'
+    
+    dependsOn undeployFromTomcat, deployToTomcat
+    
+    // Ensure proper task order
+    deployToTomcat.mustRunAfter undeployFromTomcat
+    
+    doLast {
+        println "Application redeployed successfully"
+        println "Access at: http://localhost:8080/todo"
+    }
+}

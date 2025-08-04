@@ -1,0 +1,59 @@
+# Gradle files
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+bin/
+.vscode/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# NetBeans files (legacy - can be removed after migration)
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Old build files (legacy - can be removed after migration)
+build.xml
+
+# Old directory structure (legacy - can be removed after migration)
+lib/
+web/
+src/java/
+src/conf/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Java compiled classes
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Virtual machine crash logs
+hs_err_pid*

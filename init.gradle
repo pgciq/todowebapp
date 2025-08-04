@@ -1,0 +1,24 @@
+// Gradle init script for Aliyun repository mirrors
+// This script configures repositories to use Aliyun mirrors for faster downloads in China
+
+allprojects {
+    repositories {
+        // Remove default repositories and add Aliyun mirrors first
+        maven { 
+            name 'AliYunCentral'
+            url 'https://maven.aliyun.com/repository/central' 
+        }
+        maven { 
+            name 'AliYunPublic'
+            url 'https://maven.aliyun.com/repository/public' 
+        }
+        maven { 
+            name 'AliYunGradlePlugin'
+            url 'https://maven.aliyun.com/repository/gradle-plugin' 
+        }
+        
+        // Keep original repositories as fallback
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
