@@ -29,10 +29,8 @@ import io.github.faimoh.todowebapp.actions.ActionFactory;
 import io.github.faimoh.todowebapp.actions.Action;
 import io.github.faimoh.todowebapp.actions.ActionResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import java.util.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.*;
 
 /**
  * The servlet that implements the controller part of the MVC for the web application.

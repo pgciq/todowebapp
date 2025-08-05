@@ -25,8 +25,8 @@
  */
 package io.github.faimoh.todowebapp.actions;
 
-import javax.servlet.http.*;
-import java.util.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Interface that represents an allowed action on the web application by a HTTP client.

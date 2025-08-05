@@ -31,7 +31,7 @@ import io.github.faimoh.todowebapp.dao.DAOFactory;
 import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.AccountSession;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import java.util.*;
 
 /**

@@ -10,8 +10,8 @@ description = 'Todo Web Application'
 
 // Java version configuration
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
@@ -24,24 +24,38 @@ repositories {
 }
 
 dependencies {
-    // Servlet API (provided by container)
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
-    compileOnly 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    // Servlet API (provided by container) - Jakarta EE 10
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    compileOnly 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.0'
     
-    // JSTL
-    implementation 'javax.servlet:jstl:1.2'
-    implementation 'org.apache.taglibs:taglibs-standard-impl:1.2.5'
+    // JSTL - Jakarta EE version
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+    
+    // Spring Framework 6.x (compatible with Java 21 and Jakarta EE)
+    implementation 'org.springframework:spring-core:6.0.11'
+    implementation 'org.springframework:spring-context:6.0.11'
+    implementation 'org.springframework:spring-beans:6.0.11'
+    implementation 'org.springframework:spring-web:6.0.11'
+    implementation 'org.springframework:spring-webmvc:6.0.11'
+    implementation 'org.springframework:spring-tx:6.0.11'
+    implementation 'org.springframework:spring-aop:6.0.11'
+    implementation 'org.springframework:spring-aspects:6.0.11'
+    
+    // Thymeleaf for Spring 6
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'
     
     // MySQL Connector
-    implementation 'mysql:mysql-connector-java:8.0.20'
+    implementation 'mysql:mysql-connector-java:8.0.33'
     
     // H2 Database for development
     implementation 'com.h2database:h2:2.2.224'
     
     // Test dependencies
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:4.6.1'
-    testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 }
 
 // Project now uses standard Maven/Gradle directory structure:
@@ -100,7 +114,7 @@ task deployToTomcat(type: Copy) {
     dependsOn war
     
     from war.archiveFile
-    into "${System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-9.0.107')}/webapps"
+    into "${System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-11.0.9')}/webapps"
     
     // Remove version from WAR filename when deploying
     rename { fileName ->

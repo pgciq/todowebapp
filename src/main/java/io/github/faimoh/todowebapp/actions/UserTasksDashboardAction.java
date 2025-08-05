@@ -31,7 +31,7 @@ import io.github.faimoh.todowebapp.dao.TaskDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
 import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import java.util.ArrayList;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 
 /**
  *

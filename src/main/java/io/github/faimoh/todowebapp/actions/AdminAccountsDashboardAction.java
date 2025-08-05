@@ -25,12 +25,14 @@
  */
 package io.github.faimoh.todowebapp.actions;
 
-import io.github.faimoh.todowebapp.model.Account;
+import java.util.ArrayList;
+
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
 import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
-import java.util.*;
-import javax.servlet.http.*;
+import io.github.faimoh.todowebapp.model.Account;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
