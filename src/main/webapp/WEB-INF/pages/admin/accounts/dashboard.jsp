@@ -17,11 +17,26 @@
     <body>
         <h1>Accounts Dashboard</h1>
         <p>Hello! ${sessionScope.account.firstName}</p>        
-        <a href="<c:url value="/app/admin/accounts/dashboard"/>">Dashboard</a> 
-        <a href="<c:url value="/app/admin/accounts/new"/>">New Account</a>
-        <a href="<c:url value="/app/users/profile"/>">My Profile</a>
-        <a href="<c:url value="/app/logout"/>">Logout</a>
-        <br><br>
+        
+        <!-- Navigation - Traditional Servlet System -->
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <h3>Traditional Servlet Navigation</h3>
+            <a href="<c:url value="/app/admin/accounts/dashboard"/>">Dashboard</a> |
+            <a href="<c:url value="/app/admin/accounts/new"/>">New Account</a> |
+            <a href="<c:url value="/app/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/app/logout"/>">Logout</a>
+        </div>
+        
+        <!-- Navigation - Spring WebMVC System -->
+        <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+            <h3>Spring WebMVC Navigation</h3>
+            <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard (Spring)</a> |
+            <a href="<c:url value="/spring/admin/accounts/new"/>">New Account (Spring)</a> |
+            <a href="<c:url value="/spring/users/profile"/>">My Profile (Spring)</a> |
+            <a href="<c:url value="/spring/logout"/>">Logout (Spring)</a>
+        </div>
+        
+        <br>
         
         <table border="1">
             <thead>
@@ -32,12 +47,13 @@
             <th>Password</th>
             <th>Created At</th>
             <th>Status</th>
+            <th>Actions</th>
         </thead>
         <c:forEach var="user" items="${requestScope.accountsList}">
         <tr>
             <td>
                 <a href="${pageContext.servletContext.contextPath}/app/admin/accounts/details?id=${user.accountID}">
-                    ${user.accountID}
+                    ${user.accountID} (Servlet)
                 </a>
             </td>
             <td>${user.username}</td>
@@ -46,6 +62,11 @@
             <td>${user.password}</td>
             <td>${user.createdAt}</td>
             <td>${user.statusID==1?'Enabled':'Disabled'}</td>
+            <td>
+                <a href="${pageContext.servletContext.contextPath}/spring/admin/accounts/details?accountID=${user.accountID}">
+                    View (Spring)
+                </a>
+            </td>
         </tr>
         </c:forEach>
         
