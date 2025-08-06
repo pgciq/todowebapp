@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'war'
-    id 'org.gretty' version '4.1.2'
 }
 
 group = 'io.github.faimoh'
@@ -16,9 +15,9 @@ java {
 
 repositories {
     // Use Aliyun mirrors for faster downloads in China
-    maven { url 'https://maven.aliyun.com/repository/public' }
-    maven { url 'https://maven.aliyun.com/repository/central' }
-    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven { url = 'https://maven.aliyun.com/repository/public' }
+    maven { url = 'https://maven.aliyun.com/repository/central' }
+    maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
     // Fallback to Maven Central
     mavenCentral()
 }
@@ -96,16 +95,6 @@ task info {
     }
 }
 
-// Gretty configuration for development server
-gretty {
-    httpPort = 8080
-    contextPath = '/todo'
-    
-    // Hot deployment support
-    reloadOnClassChange = false
-    reloadOnConfigChange = false
-}
-
 // Custom deployment tasks for external Tomcat
 task deployToTomcat(type: Copy) {
     description = 'Deploy WAR file to Tomcat webapps directory'
@@ -114,7 +103,7 @@ task deployToTomcat(type: Copy) {
     dependsOn war
     
     from war.archiveFile
-    into "${System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-11.0.9')}/webapps"
+    into "${System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')}/webapps"
     
     // Remove version from WAR filename when deploying
     rename { fileName ->
@@ -135,7 +124,7 @@ task undeployFromTomcat(type: Delete) {
     description = 'Remove application from Tomcat webapps directory'
     group = 'deployment'
     
-    def tomcatHome = System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-9.0.107')
+    def tomcatHome = System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')
     delete "${tomcatHome}/webapps/todo.war"
     delete "${tomcatHome}/webapps/todo"
     
