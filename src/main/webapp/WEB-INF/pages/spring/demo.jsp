@@ -81,6 +81,12 @@ public class TaskController {<br>
                     <li><code>POST /spring/tasks/update</code> - Update task</li>
                     <li><code>GET /spring/users/profile</code> - User profile</li>
                     <li><code>POST /spring/users/update</code> - Update profile</li>
+                    <li><strong>Admin Endpoints:</strong></li>
+                    <li><code>GET /spring/admin/accounts/dashboard</code> - Admin accounts dashboard</li>
+                    <li><code>GET /spring/admin/accounts/new</code> - New account form</li>
+                    <li><code>POST /spring/admin/accounts/create</code> - Create account</li>
+                    <li><code>GET /spring/admin/accounts/details?id=N</code> - Account details</li>
+                    <li><code>POST /spring/admin/accounts/update</code> - Update account</li>
                 </ul>
             </div>
             

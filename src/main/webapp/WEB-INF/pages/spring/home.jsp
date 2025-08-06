@@ -46,6 +46,7 @@
                     <a href="<c:url value='/spring/login'/>">Spring WebMVC Login</a>
                     <a href="<c:url value='/spring/demo'/>">Spring WebMVC Demo</a>
                 </div>
+                <p><em>Note: Admin users (accountID=1) will be redirected to the admin dashboard after login.</em></p>
             </div>
             
             <div class="section">
