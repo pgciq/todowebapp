@@ -72,6 +72,7 @@ public class UserController {
     @PostMapping("/update")
     public String updateProfile(@RequestParam String firstName,
                               @RequestParam String lastName,
+                              @RequestParam(required = false) String password,
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
         try {
@@ -87,9 +88,22 @@ public class UserController {
             // Save to database
             DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
             AccountDAO accountDAO = daoFactory.getAccountDAO();
-            boolean isUpdated = accountDAO.updateAccount(sessionUser);
+            
+            boolean isAccountUpdated;
+            boolean isPasswordChanged;
+            
+            if (password == null || password.trim().isEmpty()) {
+                // Update only profile information (no password change)
+                isAccountUpdated = accountDAO.updateAccount(sessionUser);
+            } else {
+                // Update profile and password
+                sessionUser.setPassword(password);
+                isPasswordChanged = accountDAO.changePassword(sessionUser);
+                isAccountUpdated = accountDAO.updateAccount(sessionUser);
+                isAccountUpdated = isPasswordChanged && isAccountUpdated;
+            }
 
-            if (isUpdated) {
+            if (isAccountUpdated) {
                 // Update session with new data
                 session.setAttribute("account", sessionUser);
                 redirectAttributes.addFlashAttribute("message", "Profile updated successfully!");

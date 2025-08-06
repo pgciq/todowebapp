@@ -78,7 +78,7 @@
                     </c:when>
                 </c:choose>
                 <td>
-                    <a href="<c:url value="/spring/tasks/details?taskID=${task.taskID}"/>">
+                    <a href="<c:url value="/spring/tasks/details?id=${task.taskID}"/>">
                         View (Spring)
                     </a>
                 </td>                     

@@ -63,7 +63,7 @@
             <td>${user.createdAt}</td>
             <td>${user.statusID==1?'Enabled':'Disabled'}</td>
             <td>
-                <a href="${pageContext.servletContext.contextPath}/spring/admin/accounts/details?accountID=${user.accountID}">
+                <a href="${pageContext.servletContext.contextPath}/spring/admin/accounts/details?id=${user.accountID}">
                     View (Spring)
                 </a>
             </td>

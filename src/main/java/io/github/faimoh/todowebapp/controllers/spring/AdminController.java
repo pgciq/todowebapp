@@ -279,6 +279,13 @@ public class AdminController {
                 isUpdated = accountDAO.resetPassword(accountToUpdate);
                 if (isUpdated) {
                     message = "Account updated successfully! Password has been reset.";
+                    // Update session if admin updated their own account
+                    Account sessionUser = (Account) session.getAttribute("account");
+                    if (accountToUpdate.getAccountID().equals(sessionUser.getAccountID())) {
+                        sessionUser.setFirstName(accountToUpdate.getFirstName());
+                        sessionUser.setLastName(accountToUpdate.getLastName());
+                        session.setAttribute("account", sessionUser);
+                    }
                 } else {
                     message = "Technical error. Please try again later.";
                 }
@@ -288,6 +295,13 @@ public class AdminController {
                 isUpdated = accountDAO.changePassword(accountToUpdate);
                 if (isUpdated) {
                     message = "Account updated successfully! Password has been changed.";
+                    // Update session if admin updated their own account
+                    Account sessionUser = (Account) session.getAttribute("account");
+                    if (accountToUpdate.getAccountID().equals(sessionUser.getAccountID())) {
+                        sessionUser.setFirstName(accountToUpdate.getFirstName());
+                        sessionUser.setLastName(accountToUpdate.getLastName());
+                        session.setAttribute("account", sessionUser);
+                    }
                 } else {
                     message = "Technical error. Please try again later.";
                 }
@@ -296,11 +310,20 @@ public class AdminController {
                 isUpdated = accountDAO.updateAccount(accountToUpdate);
                 if (isUpdated) {
                     message = "Account updated successfully!";
+                    // Update session if admin updated their own account
+                    Account sessionUser = (Account) session.getAttribute("account");
+                    if (accountToUpdate.getAccountID().equals(sessionUser.getAccountID())) {
+                        sessionUser.setFirstName(accountToUpdate.getFirstName());
+                        sessionUser.setLastName(accountToUpdate.getLastName());
+                        session.setAttribute("account", sessionUser);
+                    }
                 } else {
                     message = "Technical error. Please try again later.";
                 }
             }
 
+            // Always add the account to the model for the result page
+            model.addAttribute("account", accountToUpdate);
             model.addAttribute("message", message);
             return "admin/accounts/updateAccountResult";
 
