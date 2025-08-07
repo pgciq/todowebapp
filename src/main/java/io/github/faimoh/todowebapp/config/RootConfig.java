@@ -27,6 +27,8 @@ package io.github.faimoh.todowebapp.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Root Application Context Configuration
@@ -36,10 +38,16 @@ import org.springframework.context.annotation.Configuration;
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
 @Configuration
+@Import(DatabaseConfig.class)
+@PropertySource({
+    "classpath:application.properties",
+    "classpath:application-${spring.profiles.active:dev}.properties"
+})
 @ComponentScan(basePackages = {
     "io.github.faimoh.todowebapp.dao",
     "io.github.faimoh.todowebapp.model",
-    "io.github.faimoh.todowebapp.services"
+    "io.github.faimoh.todowebapp.services",
+    "io.github.faimoh.todowebapp.config"
 })
 public class RootConfig {
     

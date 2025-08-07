@@ -25,11 +25,12 @@
  */
 package io.github.faimoh.todowebapp.dao;
 
-import javax.sql.DataSource;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import io.github.faimoh.todowebapp.config.DataSourceProvider;
 
 /**
  * Database Configuration Manager
@@ -81,7 +82,7 @@ public class DatabaseConfigurationManager {
     }
     
     /**
-     * Detects the database type by examining the JNDI datasource configuration
+     * Detects the database type by examining the Spring-managed DataSource
      * @return DatabaseType enum representing the detected database
      */
     public static DatabaseType detectDatabaseType() {
@@ -90,8 +91,15 @@ public class DatabaseConfigurationManager {
         }
         
         try {
-            InitialContext ic = new InitialContext();
-            DataSource dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/todo");
+            // Get DataSource from Spring DataSourceProvider
+            if (!DataSourceProvider.isAvailable()) {
+                System.err.println("DatabaseConfigurationManager: DataSource not available from DataSourceProvider");
+                detectedDatabaseType = DatabaseType.UNKNOWN;
+                initialized = true;
+                return detectedDatabaseType;
+            }
+            
+            DataSource dataSource = DataSourceProvider.getDataSource();
             
             if (dataSource != null) {
                 try (Connection connection = dataSource.getConnection()) {
@@ -125,11 +133,11 @@ public class DatabaseConfigurationManager {
                     }
                 }
             } else {
-                System.err.println("DatabaseConfigurationManager: DataSource not found in JNDI");
+                System.err.println("DatabaseConfigurationManager: DataSource not found in DataSourceProvider");
                 detectedDatabaseType = DatabaseType.UNKNOWN;
             }
-        } catch (NamingException e) {
-            System.err.println("DatabaseConfigurationManager: Error looking up DataSource: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("DatabaseConfigurationManager: Error getting DataSource from DataSourceProvider: " + e.getMessage());
             detectedDatabaseType = DatabaseType.UNKNOWN;
         }
         

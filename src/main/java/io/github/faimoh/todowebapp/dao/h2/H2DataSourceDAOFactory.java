@@ -25,14 +25,16 @@
  */
 package io.github.faimoh.todowebapp.dao.h2;
 
-import io.github.faimoh.todowebapp.dao.TaskDAO;
-import io.github.faimoh.todowebapp.dao.AccountDAO;
-import io.github.faimoh.todowebapp.dao.DAOFactory;
-import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+
+import io.github.faimoh.todowebapp.config.DataSourceProvider;
+import io.github.faimoh.todowebapp.dao.AccountDAO;
+import io.github.faimoh.todowebapp.dao.AccountSessionDAO;
+import io.github.faimoh.todowebapp.dao.DAOFactory;
+import io.github.faimoh.todowebapp.dao.TaskDAO;
 
 /**
  * H2 DataSource DAO Factory for development environment
@@ -44,9 +46,13 @@ public class H2DataSourceDAOFactory extends DAOFactory {
     
     private H2DataSourceDAOFactory() {
         try {
-            InitialContext ic = new InitialContext();
-            dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/todo");            
-        }catch(NamingException e) {
+            if (DataSourceProvider.isAvailable()) {
+                dataSource = DataSourceProvider.getDataSource();
+            } else {
+                System.err.println("H2DataSourceDAOFactory: DataSource not available from DataSourceProvider");
+            }
+        } catch (Exception e) {
+            System.err.println("H2DataSourceDAOFactory: Error getting DataSource: " + e.getMessage());
             e.printStackTrace();
         }
     }
