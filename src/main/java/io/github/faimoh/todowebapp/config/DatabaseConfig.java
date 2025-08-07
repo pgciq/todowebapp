@@ -43,6 +43,8 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @PropertySource("classpath:application.properties")
+@PropertySource(value = "classpath:application-${spring.profiles.active:dev}.properties", 
+                ignoreResourceNotFound = true)
 public class DatabaseConfig {
     
     // Database connection settings (externalized to properties)

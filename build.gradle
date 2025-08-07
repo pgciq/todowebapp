@@ -227,10 +227,10 @@ task showConfig {
         println "Current Spring Profile: ${activeProfile}"
         
         if (activeProfile == 'dev' || activeProfile == 'default') {
-            println "Current configuration: DEVELOPMENT (H2 Database)"
-            println "  - Database: File-based H2"
+            println "Current configuration: DEVELOPMENT (H2 In-Memory Database)"
+            println "  - Database: In-memory H2"
             println "  - Auto-initialization: Enabled"
-            println "  - Location: ./h2db/todo"
+            println "  - Location: memory"
         } else if (activeProfile == 'prod') {
             println "Current configuration: PRODUCTION (MySQL Database)" 
             println "  - Database: MySQL"

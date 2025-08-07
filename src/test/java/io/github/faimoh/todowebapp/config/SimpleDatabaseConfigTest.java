@@ -38,11 +38,11 @@ public class SimpleDatabaseConfigTest {
                 String databaseProductName = metaData.getDatabaseProductName();
                 String url = metaData.getURL();
                 
-                // For dev profile, should be H2
+                // For dev profile, should be H2 in-memory
                 assertTrue("Should be using H2 database in dev profile, but was: " + databaseProductName,
                     databaseProductName.contains("H2"));
-                assertTrue("URL should contain h2, but was: " + url,
-                    url.contains("h2"));
+                assertTrue("URL should contain h2:mem, but was: " + url,
+                    url.contains("h2:mem"));
                 
                 System.out.println("Simple DataSource Test Results:");
                 System.out.println("Database Product: " + databaseProductName);
