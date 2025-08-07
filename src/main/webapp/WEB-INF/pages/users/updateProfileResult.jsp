@@ -19,11 +19,11 @@
         <!-- Navigation -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Navigation</h3>
-            <a href="<c:url value="${sessionScope.account.accountID==1?'/spring/admin/accounts/dashboard':'/spring/tasks/dashboard'}"/>">Dashboard</a> |
-            <a href="<c:url value="${sessionScope.account.accountID==1?'/spring/admin/accounts/new':'/spring/tasks/new'}"/>">
+            <a href="<c:url value="${sessionScope.account.accountID==1?'/admin/accounts/dashboard':'/tasks/dashboard'}"/>">Dashboard</a> |
+            <a href="<c:url value="${sessionScope.account.accountID==1?'/admin/accounts/new':'/tasks/new'}"/>">
                 ${sessionScope.account.accountID==1?'New Account':'New Task'}</a> |             
-            <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-            <a href="<c:url value="/spring/logout"/>">Logout</a>
+            <a href="<c:url value="/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/logout"/>">Logout</a>
         </div>
         
         <br>
@@ -32,7 +32,7 @@
         <!-- Profile Update Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Update Profile</h3>
-            <form method="POST" action="<c:url value="/spring/users/update"/>">  
+            <form method="POST" action="<c:url value="/users/update"/>">  
                 <fieldset>
                     <legend>Profile details</legend>
                     <label for="accountID2">Account ID:</label>${sessionScope.account.accountID}<br><br>            

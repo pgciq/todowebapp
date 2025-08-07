@@ -111,11 +111,11 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("message", "Technical error. Please try again later.");
             }
 
-            return "redirect:/spring/users/profile";
+            return "redirect:/users/profile";
         } catch (Exception e) {
             System.err.println("Error updating profile: " + e.getMessage());
             redirectAttributes.addFlashAttribute("message", "Error updating profile: " + e.getMessage());
-            return "redirect:/spring/users/profile";
+            return "redirect:/users/profile";
         }
     }
 }

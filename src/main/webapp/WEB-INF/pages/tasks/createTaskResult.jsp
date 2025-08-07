@@ -19,10 +19,10 @@
         
         <!-- Navigation -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-            <a href="<c:url value="/spring/tasks/new"/>">New Task</a> |
-            <a href="<c:url value="/spring/tasks/dashboard"/>">Dashboard</a> |
-            <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-            <a href="<c:url value="/spring/logout"/>">Logout</a>
+            <a href="<c:url value="/tasks/new"/>">New Task</a> |
+            <a href="<c:url value="/tasks/dashboard"/>">Dashboard</a> |
+            <a href="<c:url value="/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/logout"/>">Logout</a>
         </div>
         
         <br>
@@ -32,7 +32,7 @@
         <!-- Create Task Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Create New Task</h3>
-            <form method="POST" action="<c:url value="/spring/tasks/create"/>">
+            <form method="POST" action="<c:url value="/tasks/create"/>">
                 <fieldset>
                     <legend>Task Details</legend>
                     <input type="hidden" name="accountID" value="${sessionScope.account.accountID}">

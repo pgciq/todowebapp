@@ -18,7 +18,7 @@
         <!-- Login Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Login</h3>
-            <form method="POST" action="<c:url value="/spring/login"/>">
+            <form method="POST" action="<c:url value="/login"/>">
                 <fieldset>
                     <legend>Login</legend>
                     <c:choose>

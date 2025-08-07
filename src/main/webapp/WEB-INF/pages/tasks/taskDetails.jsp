@@ -20,10 +20,10 @@
         
         <!-- Navigation -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-            <a href="<c:url value="/spring/tasks/new"/>">New Task</a> |
-            <a href="<c:url value="/spring/tasks/dashboard"/>">Dashboard</a> |
-            <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-            <a href="<c:url value="/spring/logout"/>">Logout</a>
+            <a href="<c:url value="/tasks/new"/>">New Task</a> |
+            <a href="<c:url value="/tasks/dashboard"/>">Dashboard</a> |
+            <a href="<c:url value="/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/logout"/>">Logout</a>
         </div>
         
         <br>
@@ -32,7 +32,7 @@
         <!-- Update Task Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Update Task</h3>
-            <form method="POST" action="<c:url value="/spring/tasks/update"/>">              
+            <form method="POST" action="<c:url value="/tasks/update"/>">              
                 <fieldset>
                     <legend>Details</legend>
                     <input type="hidden" name="taskID" value="${requestScope.task.taskID}">

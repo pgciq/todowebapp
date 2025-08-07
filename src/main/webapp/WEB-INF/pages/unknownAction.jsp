@@ -20,19 +20,19 @@
             <c:when test="${sessionScope.account.accountID==1}">                
                 <!-- Admin Navigation -->
                 <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-                    <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard</a> |
-                    <a href="<c:url value="/spring/admin/accounts/new"/>">New Account</a> |
-                    <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-                    <a href="<c:url value="/spring/logout"/>">Logout</a>
+                    <a href="<c:url value="/admin/accounts/dashboard"/>">Dashboard</a> |
+                    <a href="<c:url value="/admin/accounts/new"/>">New Account</a> |
+                    <a href="<c:url value="/users/profile"/>">My Profile</a> |
+                    <a href="<c:url value="/logout"/>">Logout</a>
                 </div>
             </c:when>
             <c:otherwise>
                 <!-- User Navigation -->
                 <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-                    <a href="<c:url value="/spring/tasks/dashboard"/>">Dashboard</a> |
-                    <a href="<c:url value="/spring/tasks/new"/>">New Task</a> |
-                    <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-                    <a href="<c:url value="/spring/logout"/>">Logout</a>
+                    <a href="<c:url value="/tasks/dashboard"/>">Dashboard</a> |
+                    <a href="<c:url value="/tasks/new"/>">New Task</a> |
+                    <a href="<c:url value="/users/profile"/>">My Profile</a> |
+                    <a href="<c:url value="/logout"/>">Logout</a>
                 </div>
             </c:otherwise>
         </c:choose>        

@@ -70,7 +70,7 @@ public class AdminController {
     public String accountsDashboard(Model model, HttpSession session) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
@@ -93,7 +93,7 @@ public class AdminController {
     @GetMapping("/accounts/new")
     public String newAccountForm(Model model, HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/spring/login";
+            return "redirect:/login";
         }
         return "admin/accounts/newAccount";
     }
@@ -110,7 +110,7 @@ public class AdminController {
                               Model model) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             // Validate input parameters
@@ -178,7 +178,7 @@ public class AdminController {
                                HttpSession session) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             String message = "";
@@ -230,7 +230,7 @@ public class AdminController {
                               RedirectAttributes redirectAttributes) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             String message = "";
@@ -340,9 +340,9 @@ public class AdminController {
     @GetMapping("/")
     public String adminHome(HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/spring/login";
+            return "redirect:/login";
         }
-        return "redirect:/spring/admin/accounts/dashboard";
+        return "redirect:/admin/accounts/dashboard";
     }
 
     /**

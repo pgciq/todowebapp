@@ -20,10 +20,10 @@
         <!-- Navigation - Spring WebMVC System -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Navigation</h3>
-            <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard</a> |
-            <a href="<c:url value="/spring/admin/accounts/new"/>">New Account</a> |
-            <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
-            <a href="<c:url value="/spring/logout"/>">Logout</a>
+            <a href="<c:url value="/admin/accounts/dashboard"/>">Dashboard</a> |
+            <a href="<c:url value="/admin/accounts/new"/>">New Account</a> |
+            <a href="<c:url value="/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/logout"/>">Logout</a>
         </div>
         
         <br>
@@ -36,7 +36,7 @@
         <!-- Account Details Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
             <h3>Update Account Details</h3>
-            <form method="POST" action="<c:url value="/spring/admin/accounts/update"/>">
+            <form method="POST" action="<c:url value="/admin/accounts/update"/>">
                 <fieldset>
                     <legend>Details</legend>
                     <input type="hidden" name="accountID" value="${requestScope.account.accountID}">
