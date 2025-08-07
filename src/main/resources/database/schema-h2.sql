@@ -1,6 +1,11 @@
 -- TodoWebApp H2 Database Schema
 -- Development database schema for H2 
 -- Based on MySQL schema but adapted for H2 syntax
+--
+-- IDEMPOTENT SCRIPT: This script can be run multiple times safely.
+-- All INSERT statements use conditional logic to prevent duplicate data.
+-- Tables are created with "IF NOT EXISTS" and data insertion uses 
+-- "WHERE NOT EXISTS" conditions to avoid constraint violations.
 
 -- ============================================================================
 -- LOOKUP TABLES (Reference Data) - Create and populate first
@@ -118,9 +123,23 @@ SELECT 'admin', 'System', 'Administrator', 'admin123', 1 WHERE NOT EXISTS (SELEC
 INSERT INTO accounts (username, first_name, last_name, password, status_id) 
 SELECT 'user', 'Test', 'User', 'user123', 1 WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE username = 'user');
 
--- Sample tasks for demonstration
-INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) VALUES 
-(1, 'Review application security settings', DATEADD('DAY', 7, CURRENT_TIMESTAMP), 1, 3),
-(1, 'Update database documentation', DATEADD('DAY', 14, CURRENT_TIMESTAMP), 1, 2),
-(2, 'Complete user profile setup', DATEADD('DAY', 3, CURRENT_TIMESTAMP), 1, 2),
-(2, 'Test new features', DATEADD('DAY', 5, CURRENT_TIMESTAMP), 2, 1);
+-- Sample tasks for demonstration (only if accounts exist and no tasks exist yet)
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
+SELECT 1, 'Review application security settings', DATEADD('DAY', 7, CURRENT_TIMESTAMP), 1, 3 
+WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 1) 
+AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 1 AND details = 'Review application security settings');
+
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
+SELECT 1, 'Update database documentation', DATEADD('DAY', 14, CURRENT_TIMESTAMP), 1, 2 
+WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 1) 
+AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 1 AND details = 'Update database documentation');
+
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
+SELECT 2, 'Complete user profile setup', DATEADD('DAY', 3, CURRENT_TIMESTAMP), 1, 2 
+WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 2) 
+AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 2 AND details = 'Complete user profile setup');
+
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
+SELECT 2, 'Test new features', DATEADD('DAY', 5, CURRENT_TIMESTAMP), 2, 1 
+WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 2) 
+AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 2 AND details = 'Test new features');
