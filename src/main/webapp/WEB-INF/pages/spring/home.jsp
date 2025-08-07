@@ -26,46 +26,31 @@
     <body>
         <div class="container">
             <h1>Todo Web Application</h1>
-            <h2>Spring WebMVC Integration Demo</h2>
+            <h2>Spring WebMVC Application</h2>
             
             <p><strong>${message}</strong></p>
             
-            <div class="section old-system">
-                <h3>Traditional Servlet-Based System (Original)</h3>
-                <p>The original system uses custom servlets, actions, and a front controller pattern.</p>
-                <div class="nav-links">
-                    <a href="<c:url value='/WEB-INF/pages/login.jsp'/>">Traditional Login (Direct JSP)</a>
-                    <a href="<c:url value='/app/login'/>">Traditional Login (via Servlet)</a>
-                </div>
-            </div>
-            
             <div class="section new-system">
-                <h3>Spring WebMVC System (New)</h3>
-                <p>The new system uses Spring WebMVC controllers with annotation-based configuration.</p>
+                <h3>Spring WebMVC System</h3>
+                <p>Modern web application using Spring WebMVC controllers with annotation-based configuration.</p>
                 <div class="nav-links">
-                    <a href="<c:url value='/spring/login'/>">Spring WebMVC Login</a>
-                    <a href="<c:url value='/spring/demo'/>">Spring WebMVC Demo</a>
+                    <a href="<c:url value='/spring/login'/>">Application Login</a>
+                    <a href="<c:url value='/spring/demo'/>">Technical Demo</a>
                 </div>
                 <p><em>Note: Admin users (accountID=1) will be redirected to the admin dashboard after login.</em></p>
             </div>
             
             <div class="section">
-                <h3>Key Differences</h3>
+                <h3>Application Features</h3>
                 <ul>
-                    <li><strong>URL Patterns:</strong> Traditional system uses <code>/app/*</code>, Spring system uses <code>/spring/*</code></li>
-                    <li><strong>Controllers:</strong> Traditional uses single servlet + action classes, Spring uses individual controller classes</li>
-                    <li><strong>Routing:</strong> Traditional uses ActionFactory, Spring uses annotation-based mapping</li>
-                    <li><strong>Configuration:</strong> Traditional uses web.xml, Spring uses Java configuration</li>
-                </ul>
-            </div>
-            
-            <div class="section">
-                <h3>Architecture Benefits</h3>
-                <ul>
-                    <li><strong>Coexistence:</strong> Both systems run simultaneously in the same application</li>
-                    <li><strong>Gradual Migration:</strong> You can migrate functionality piece by piece</li>
-                    <li><strong>Modern Features:</strong> Spring provides dependency injection, AOP, and more</li>
-                    <li><strong>Testing:</strong> Spring controllers are easier to unit test</li>
+                    <li><strong>Modern Architecture:</strong> Built with Spring WebMVC framework</li>
+                    <li><strong>Annotation-Based:</strong> Uses @Controller, @RequestMapping annotations</li>
+                    <li><strong>Dependency Injection:</strong> Spring manages components and dependencies</li>
+                    <li><strong>Java Configuration:</strong> Type-safe configuration without XML</li>
+                    <li><strong>Task Management:</strong> Complete CRUD operations for tasks</li>
+                    <li><strong>User Management:</strong> Admin interface for user account management</li>
+                    <li><strong>Authentication:</strong> Session-based security</li>
+                    <li><strong>Database Flexibility:</strong> H2 (development) and MySQL (production) support</li>
                 </ul>
             </div>
         </div>

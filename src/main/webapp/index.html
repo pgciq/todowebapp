@@ -64,17 +64,9 @@
                 border-radius: 5px;
                 font-weight: bold;
                 transition: background-color 0.3s;
-            }
-            .traditional-btn {
-                background-color: #ffc107;
-            }
-            .traditional-btn:hover {
-                background-color: #e0a800;
-            }
-            .spring-btn {
                 background-color: #28a745;
             }
-            .spring-btn:hover {
+            .nav-buttons a:hover {
                 background-color: #218838;
             }
             .comparison {
@@ -93,22 +85,7 @@
         <div class="container">
             <div class="header">
                 <h1>Todo Web Application</h1>
-                <p>Demonstration of Traditional Servlet and Spring WebMVC Architectures</p>
-            </div>
-            
-            <div class="system-section traditional-system">
-                <h2>🔧 Traditional Servlet-Based System</h2>
-                <p>The original architecture using Jakarta EE servlets, custom actions, and front controller pattern.</p>
-                <ul class="feature-list">
-                    <li>Single Front Controller servlet</li>
-                    <li>Action-based business logic</li>
-                    <li>Manual request routing via ActionFactory</li>
-                    <li>Traditional JSP view resolution</li>
-                    <li>web.xml configuration</li>
-                </ul>
-                <div class="nav-buttons">
-                    <a href="app/login" class="traditional-btn">Access Traditional System</a>
-                </div>
+                <p>Modern Spring WebMVC Architecture</p>
             </div>
             
             <div class="system-section spring-system">
@@ -120,20 +97,23 @@
                     <li>Automatic request mapping (@RequestMapping)</li>
                     <li>Spring view resolution</li>
                     <li>Java-based configuration</li>
-                    <li><strong>Complete admin module implementation</strong></li>
+                    <li><strong>Complete admin and user module implementation</strong></li>
+                    <li><strong>Task management system</strong></li>
+                    <li><strong>User authentication and authorization</strong></li>
                 </ul>
                 <div class="nav-buttons">
-                    <a href="spring/" class="spring-btn">Access Spring WebMVC System</a>
+                    <a href="spring/" class="spring-btn">Access Application</a>
                     <a href="spring/demo" class="spring-btn">View Technical Demo</a>
                 </div>
                 <p><em>Admin users will be automatically redirected to the admin dashboard.</em></p>
             </div>
             
             <div class="comparison">
-                <h3>Architecture Comparison</h3>
-                <p><strong>Coexistence:</strong> Both systems run simultaneously in the same WAR file, sharing the same database layer and session management.</p>
-                <p><strong>URL Patterns:</strong> Traditional system uses <code>/app/*</code> while Spring system uses <code>/spring/*</code></p>
-                <p><strong>Migration Path:</strong> This setup allows gradual migration from traditional servlet architecture to modern Spring WebMVC.</p>
+                <h3>Application Features</h3>
+                <p><strong>User Management:</strong> Admin can create, view, and manage user accounts with role-based access control.</p>
+                <p><strong>Task Management:</strong> Users can create, update, and track their tasks with priority and status management.</p>
+                <p><strong>Authentication:</strong> Secure session-based authentication with proper access controls.</p>
+                <p><strong>Database:</strong> Flexible database support with H2 (development) and MySQL (production) configurations.</p>
             </div>
         </div>
     </body>

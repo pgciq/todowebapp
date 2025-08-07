@@ -1,5 +1,7 @@
 # todowebapp
 
+> **Note:** This project has been migrated to use Spring WebMVC exclusively. The traditional servlet-based system described in parts of this documentation has been removed. The application now runs entirely on Spring WebMVC framework.
+
 ## Quick Start
 
 **Development (H2 Database - Default):**

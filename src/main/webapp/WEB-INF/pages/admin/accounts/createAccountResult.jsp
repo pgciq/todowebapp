@@ -16,50 +16,25 @@
         <h1>Create New Account</h1>
         <p>Hello! ${sessionScope.account.firstName}</p>        
         
-        <!-- Navigation - Traditional Servlet System -->
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-            <h3>Traditional Servlet Navigation</h3>
-            <a href="<c:url value="/app/admin/accounts/dashboard"/>">Dashboard</a> |
-            <a href="<c:url value="/app/admin/accounts/new"/>">New Account</a> |
-            <a href="<c:url value="/app/users/profile"/>">My Profile</a> |
-            <a href="<c:url value="/app/logout"/>">Logout</a>
-        </div>
-        
-        <!-- Navigation - Spring WebMVC System -->
+        <!-- Navigation -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-            <h3>Spring WebMVC Navigation</h3>
-            <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard (Spring)</a> |
-            <a href="<c:url value="/spring/admin/accounts/new"/>">New Account (Spring)</a> |
-            <a href="<c:url value="/spring/users/profile"/>">My Profile (Spring)</a> |
-            <a href="<c:url value="/spring/logout"/>">Logout (Spring)</a>
+            <h3>Navigation</h3>
+            <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard</a> |
+            <a href="<c:url value="/spring/admin/accounts/new"/>">New Account</a> |
+            <a href="<c:url value="/spring/users/profile"/>">My Profile</a> |
+            <a href="<c:url value="/spring/logout"/>">Logout</a>
         </div>
         
         <br>
         <b>${requestScope.message}</b>
         <br><br>        
         
-        <!-- Traditional Servlet Form -->
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-            <h3>Create via Traditional Servlet</h3>
-            <form method="POST" action="<c:url value="/app/admin/accounts/create"/>">
-                <fieldset>
-                    <legend>New account details</legend>
-                    All form fields are required.
-                    <br><br>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="${requestScope.username}" required><br><br>
+        <!-- Create Account Form -->
                     <label for="firstName">First name:</label>
                     <input type="text" id="firstName" name="firstName" value="${requestScope.firstName}" required><br><br>
                     <label for="lastName">Last name:</label>
-                    <input type="text" id="lastName" name="lastName" value="${requestScope.lastName}" required><br><br>
-                    <input type="submit" value="Create (Servlet)">
-                </fieldset>
-            </form>
-        </div>
-        
-        <!-- Spring WebMVC Form -->
         <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-            <h3>Create via Spring WebMVC</h3>
+            <h3>Create New Account</h3>
             <form method="POST" action="<c:url value="/spring/admin/accounts/create"/>">
                 <fieldset>
                     <legend>New account details</legend>
@@ -71,7 +46,7 @@
                     <input type="text" id="firstName2" name="firstName" value="${requestScope.firstName}" required><br><br>
                     <label for="lastName2">Last name:</label>
                     <input type="text" id="lastName2" name="lastName" value="${requestScope.lastName}" required><br><br>
-                    <input type="submit" value="Create (Spring)">
+                    <input type="submit" value="Create Account">
                 </fieldset>
             </form>
         </div>
