@@ -188,7 +188,13 @@ public class H2DataSourceAccountDAO implements AccountDAO {
     
     @Override
     public Boolean updateAccount(Account account, boolean resetPassword) {
-        return updateAccount(account);
+        if(resetPassword){
+            boolean pwdReset = this.resetPassword(account);
+            boolean accountUpdate = this.updateAccount(account);
+            return pwdReset && accountUpdate;
+        }else{
+            return this.updateAccount(account);
+        }         
     }
     
     @Override

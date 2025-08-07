@@ -275,8 +275,8 @@ public class AdminController {
             boolean isUpdated;
 
             if (resetPassword) {
-                // Reset password functionality
-                isUpdated = accountDAO.resetPassword(accountToUpdate);
+                // Reset password functionality - use the method that handles both password reset and account update
+                isUpdated = accountDAO.updateAccount(accountToUpdate, true);
                 if (isUpdated) {
                     message = "Account updated successfully! Password has been reset.";
                     // Update session if admin updated their own account
@@ -307,7 +307,7 @@ public class AdminController {
                 }
             } else {
                 // Regular update without password change
-                isUpdated = accountDAO.updateAccount(accountToUpdate);
+                isUpdated = accountDAO.updateAccount(accountToUpdate, false);
                 if (isUpdated) {
                     message = "Account updated successfully!";
                     // Update session if admin updated their own account

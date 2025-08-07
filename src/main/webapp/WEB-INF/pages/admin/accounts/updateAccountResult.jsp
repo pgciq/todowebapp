@@ -82,8 +82,8 @@
                     <input type="text" id="firstName2" name="firstName" value="${requestScope.account.firstName}" required><br><br>
                     <label for="lastName2">Last name:</label>
                     <input type="text" id="lastName2" name="lastName" value="${requestScope.account.lastName}" required><br><br>
-                    <label for="password2">Reset password to default:</label>
-                    <input type="checkbox" id="password2" name="password" value="reset"><br><br>
+                    <label for="resetPassword2">Reset password to default:</label>
+                    <input type="checkbox" id="resetPassword2" name="resetPassword" value="true"><br><br>
                     <label for="status2">Account status:</label>
                     <input type="radio" id="enabled2" name="status" value="1" ${requestScope.account.statusID==1?'checked':''}>
                     <label for="enabled2">Enabled</label>
