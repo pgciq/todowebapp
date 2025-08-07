@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - Unknown Action</title>
+</head>
+<body>
+    <h1>Unknown request! :(</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p>
+    
+    <div th:if="${session.account.accountID == 1}">                
+        <!-- Admin Navigation -->
+        <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+            <a th:href="@{/admin/accounts/dashboard}">Dashboard</a> |
+            <a th:href="@{/admin/accounts/new}">New Account</a> |
+            <a th:href="@{/users/profile}">My Profile</a> |
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+    <div th:unless="${session.account.accountID == 1}">
+        <!-- User Navigation -->
+        <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+            <a th:href="@{/tasks/dashboard}">Dashboard</a> |
+            <a th:href="@{/tasks/new}">New Task</a> |
+            <a th:href="@{/users/profile}">My Profile</a> |
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+    <p th:text="${message}"></p>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - Create New Task</title>
+</head>
+<body>
+    <h1>Create New Task</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p>
+    
+    <!-- Navigation -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <a th:href="@{/tasks/new}">New Task</a> |
+        <a th:href="@{/tasks/dashboard}">Dashboard</a> |
+        <a th:href="@{/users/profile}">My Profile</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    
+    <br>
+    <b th:text="${message}"></b>
+    <br><br>
+    
+    <!-- Create Task Form -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Create New Task</h3>
+        <form method="POST" th:action="@{/tasks/create}">
+            <fieldset>
+                <legend>Task Details</legend>
+                <input type="hidden" name="accountID" th:value="${session.account.accountID}">
+                <label for="details">What do you want to accomplish?</label>
+                <br><br>
+                <textarea name="details" id="details" rows="4" cols="64" placeholder="256 characters max." maxlength="256"></textarea>
+                <br><br>  
+                <label for="date">By what date and time?</label>            
+                <input name="date" id="date" type="date" th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}" required/>
+                <input name="time" id="time" type="time" value="23:59" required/>
+                <br><br>
+                <label for="priority">Choose priority:</label>
+                <select id="priority" name="priority" required>
+                    <option value="">None</option>
+                    <option value="1">Important & Urgent</option>
+                    <option value="2">Important but Not Urgent</option>
+                    <option value="3">Not Important but Urgent</option>
+                    <option value="4">Not Important & Not Urgent</option>
+                </select>
+                <br><br>
+                <input type="submit" value="Create Task">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

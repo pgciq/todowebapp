@@ -25,11 +25,6 @@ repositories {
 dependencies {
     // Servlet API (provided by container) - Jakarta EE 10
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    compileOnly 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.0'
-    
-    // JSTL - Jakarta EE version
-    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
-    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
     
     // Spring Framework 6.x (compatible with Java 21 and Jakarta EE)
     implementation 'org.springframework:spring-core:6.0.11'

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - Create New Account</title>
+</head>
+<body>
+    <h1>Create New Account</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p>
+    
+    <!-- Navigation -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Navigation</h3>
+        <a th:href="@{/admin/accounts/dashboard}">Dashboard</a> |
+        <a th:href="@{/admin/accounts/new}">New Account</a> |
+        <a th:href="@{/users/profile}">My Profile</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+
+    <br><br>
+    
+    <!-- Create Account Form -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Create New Account</h3>
+        <form method="POST" th:action="@{/admin/accounts/create}">
+            <fieldset>
+                <legend>New account details</legend>
+                All form fields are required.<br><br>
+                <label for="username2">Username:</label>
+                <input type="text" id="username2" name="username" required><br><br>
+                <label for="firstName2">First name:</label>
+                <input type="text" id="firstName2" name="firstName" required><br><br>
+                <label for="lastName2">Last name:</label>
+                <input type="text" id="lastName2" name="lastName" required><br><br>
+                <input type="submit" value="Create Account">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - Update Task</title>
+</head>
+<body>
+    <h1>Task Details</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p>
+    
+    <!-- Navigation -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <a th:href="@{/tasks/new}">New Task</a> |
+        <a th:href="@{/tasks/dashboard}">Dashboard</a> |
+        <a th:href="@{/users/profile}">My Profile</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    
+    <br>
+    <b th:text="${message}"></b>
+    
+    <!-- Update Task Form -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Update Task</h3>
+        <form method="POST" th:action="@{/tasks/update}">
+            <fieldset>
+                <legend>Details</legend>
+                <input type="hidden" name="accountID" th:value="${task.accountID}">
+                <input type="hidden" name="taskID" th:value="${task.taskID}">
+                <input type="hidden" name="createdAt" th:value="${task.createdAt}">            
+                <br>
+                <label>Task ID: </label><span th:text="${task.taskID}"></span>
+                <br><br>
+                <label>Created At: </label>
+                <br>
+                <span th:text="${task.createdAt}"></span>
+                <br><br> 
+                <label for="details">What do you want to accomplish?</label>
+                <br>
+                <textarea name="details" id="details" rows="4" cols="16" th:text="${task.details}"></textarea>            
+                <br><br>  
+                <label for="date">By what date and time?</label>            
+                <input name="date" id="date" type="date" 
+                       th:value="${task.deadline != null} ? ${#dates.format(task.deadline, 'yyyy-MM-dd')} : ${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
+                       th:min="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}" required/>
+                <input name="time" id="time" type="time" 
+                       th:value="${task.deadline != null} ? ${#dates.format(task.deadline, 'HH:mm')} : '23:59'"
+                       required/>
+
+                <br><br>
+                <label for="priorityID">Task priority:</label>
+                <select id="priorityID" name="priorityID" required>                
+                    <option value="1" th:selected="${task.priorityID == 1}">Important & Urgent</option>
+                    <option value="2" th:selected="${task.priorityID == 2}">Important but Not Urgent</option>
+                    <option value="3" th:selected="${task.priorityID == 3}">Not Important but Urgent</option>
+                    <option value="4" th:selected="${task.priorityID == 4}">Not Important & Not Urgent</option>
+                </select>
+                <br><br>
+                <label for="status">Task status:</label>
+                <input type="radio" id="todo" name="statusID" value="1" th:checked="${task.statusID == 1}">
+                <label for="todo">To Do</label>
+                <input type="radio" id="progress" name="statusID" value="2" th:checked="${task.statusID == 2}">
+                <label for="progress">In Progress</label>
+                <input type="radio" id="done" name="statusID" value="3" th:checked="${task.statusID == 3}">
+                <label for="done">Done</label>
+                <br><br>
+                <input type="submit" value="Update Task">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

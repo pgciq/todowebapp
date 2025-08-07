@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - User Profile</title>
+</head>
+<body>
+    <h1>Your profile</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p> 
+    
+    <!-- Navigation -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Navigation</h3>
+        <a th:href="${session.account.accountID == 1} ? @{/admin/accounts/dashboard} : @{/tasks/dashboard}">Dashboard</a> |
+        <a th:href="${session.account.accountID == 1} ? @{/admin/accounts/new} : @{/tasks/new}" 
+           th:text="${session.account.accountID == 1} ? 'New Account' : 'New Task'"></a> |               
+        <a th:href="@{/users/profile}">My Profile</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    
+    <br>
+    <b th:text="${message}"></b><br>
+    
+    <!-- Profile Update Form -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Update Profile</h3>
+        <form method="POST" th:action="@{/users/update}">
+            <fieldset>
+                <legend>Profile details</legend>
+                <label for="accountID2">Account ID: </label><span th:text="${session.account.accountID}"></span><br><br>
+                <label for="username2">Username: </label><span th:text="${session.account.username}"></span><br><br>
+                <label>Created at: </label><span th:text="${session.account.createdAt}"></span><br><br>
+                <label>Last login at: </label><span th:text="${session.accountPreviousSession?.sessionCreated}"></span><br><br>
+                <label for="firstName2">First name: </label>
+                <input type="text" id="firstName2" name="firstName" th:value="${session.account.firstName}" required><br><br>
+                <label for="lastName2">Last name: </label>
+                <input type="text" id="lastName2" name="lastName" th:value="${session.account.lastName}" required><br><br>
+                <label for="password2">New password: </label>
+                <input type="password" id="password2" name="password" value=""><br><br>
+                <input type="hidden" name="accountID" th:value="${account?.accountID}">
+                <input type="hidden" name="username" th:value="${account?.username}">
+                <input type="submit" value="Update Profile">
+            </fieldset>
+        </form>
+    </div>
+    <br><br>
+    <p>If you face trouble signing in to your account after changing your password, ask administrator for help.<br>
+        Your administrator can help reset your password.
+    </p>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp - Tasks Dashboard</title>
+</head>
+<body>
+    <h1>Tasks Dashboard</h1>
+    <p>Hello! <span th:text="${session.account.firstName}"></span></p>
+    
+    <!-- Navigation -->
+    <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
+        <h3>Navigation</h3>
+        <a th:href="@{/tasks/new}">New Task</a> |
+        <a th:href="@{/tasks/dashboard}">Dashboard</a> |
+        <a th:href="@{/users/profile}">My Profile</a> |
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    
+    <br>        
+
+    <table border="1">            
+        <thead>
+            <th>Task ID</th>
+            <th>Details</th>
+            <th>Created At</th>
+            <th>Deadline</th>
+            <th>Last Updated</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </thead>                
+        <tr th:each="task : ${tasksList}">
+            <td>
+                <a th:href="@{/tasks/details(id=${task.taskID})}" th:text="${task.taskID}"></a>
+            </td>                
+            <td th:text="${task.details}"></td>
+            <td th:text="${task.createdAt}"></td>
+            <td th:text="${task.deadline}"></td>
+            <td th:text="${task.lastUpdated}"></td>
+            <td th:switch="${task.priorityID}">
+                <span th:case="1">Important & Urgent</span>
+                <span th:case="2">Important but Not Urgent</span>
+                <span th:case="3">Not Important but Urgent</span>
+                <span th:case="4">Not Important & Not Urgent</span>
+            </td>
+            <td th:switch="${task.statusID}">
+                <span th:case="1">To do</span>
+                <span th:case="2">In progress</span>
+                <span th:case="3">Done</span>
+            </td>
+            <td>
+                <a th:href="@{/tasks/details(id=${task.taskID})}">View Details</a>
+            </td>                     
+        </tr>
+    </table>
+</body>
+</html>
