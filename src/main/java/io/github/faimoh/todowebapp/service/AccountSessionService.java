@@ -1,15 +1,15 @@
 package io.github.faimoh.todowebapp.service;
 
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.faimoh.todowebapp.model.AccountSession;
 import io.github.faimoh.todowebapp.repository.AccountSessionRepository;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Service layer for AccountSession operations
@@ -39,6 +39,15 @@ public class AccountSessionService {
      */
     public List<AccountSession> getSessionsByAccountID(Integer accountID) {
         return accountSessionRepository.findByAccountID(accountID);
+    }
+    
+    /**
+     * Get all sessions for a specific account ordered by creation date (most recent first)
+     * @param accountID the account ID to get sessions for
+     * @return List<AccountSession> list of sessions for the account ordered by creation date desc
+     */
+    public List<AccountSession> getSessionsByAccountIDOrderByCreated(Integer accountID) {
+        return accountSessionRepository.findByAccountIDOrderBySessionCreatedDesc(accountID);
     }
     
     /**

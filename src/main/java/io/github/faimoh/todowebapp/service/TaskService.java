@@ -1,5 +1,9 @@
 package io.github.faimoh.todowebapp.service;
 
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.Task;
 import io.github.faimoh.todowebapp.repository.TaskRepository;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Service layer for Task operations
@@ -101,13 +101,16 @@ public class TaskService {
             }
             
             // Update last modified timestamp
-            task.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+            Timestamp lastUpdated = new Timestamp(System.currentTimeMillis());
+            task.setLastUpdated(lastUpdated);
             
             int rowsAffected = taskRepository.updateTaskDetails(
                 task.getTaskID(),
                 task.getDetails(),
                 task.getStatusID(),
-                task.getPriorityID()
+                task.getPriorityID(),
+                task.getDeadline(),
+                lastUpdated
             );
             
             return rowsAffected > 0;

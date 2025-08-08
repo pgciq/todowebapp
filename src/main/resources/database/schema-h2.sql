@@ -117,30 +117,30 @@ CREATE TABLE IF NOT EXISTS account_sessions (
 -- ============================================================================
 
 -- Default admin account (only if not exist)
-INSERT INTO accounts (username, first_name, last_name, password, status_id) 
-SELECT 'admin', 'System', 'Administrator', 'admin123', 1 WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE username = 'admin');
+INSERT INTO accounts (username, first_name, last_name, password, status_id, created_at) 
+SELECT 'admin', 'System', 'Administrator', 'admin123', 1, DATEADD('DAY', -90, CURRENT_TIMESTAMP) WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE username = 'admin');
 
 -- Sample user account (only if not exist)
-INSERT INTO accounts (username, first_name, last_name, password, status_id) 
-SELECT 'user', 'Test', 'User', 'user123', 1 WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE username = 'user');
+INSERT INTO accounts (username, first_name, last_name, password, status_id, created_at) 
+SELECT 'user', 'Test', 'User', 'user123', 1, DATEADD('DAY', -60, CURRENT_TIMESTAMP) WHERE NOT EXISTS (SELECT 1 FROM accounts WHERE username = 'user');
 
 -- Sample tasks for demonstration (only if accounts exist and no tasks exist yet)
-INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
-SELECT 1, 'Review application security settings', DATEADD('DAY', 7, CURRENT_TIMESTAMP), 1, 3 
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id, created_at, last_updated) 
+SELECT 1, 'Review application security settings', DATEADD('DAY', 7, CURRENT_TIMESTAMP), 1, 3, DATEADD('DAY', -7, CURRENT_TIMESTAMP), DATEADD('DAY', -2, CURRENT_TIMESTAMP) 
 WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 1) 
 AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 1 AND details = 'Review application security settings');
 
-INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
-SELECT 1, 'Update database documentation', DATEADD('DAY', 14, CURRENT_TIMESTAMP), 1, 2 
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id, created_at, last_updated) 
+SELECT 1, 'Update database documentation', DATEADD('DAY', 14, CURRENT_TIMESTAMP), 1, 2, DATEADD('DAY', -10, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP) 
 WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 1) 
 AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 1 AND details = 'Update database documentation');
 
-INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
-SELECT 2, 'Complete user profile setup', DATEADD('DAY', 3, CURRENT_TIMESTAMP), 1, 2 
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id, created_at, last_updated) 
+SELECT 2, 'Complete user profile setup', DATEADD('DAY', 3, CURRENT_TIMESTAMP), 1, 2, DATEADD('DAY', -5, CURRENT_TIMESTAMP), DATEADD('HOUR', -6, CURRENT_TIMESTAMP) 
 WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 2) 
 AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 2 AND details = 'Complete user profile setup');
 
-INSERT INTO tasks (account_id, details, deadline, status_id, priority_id) 
-SELECT 2, 'Test new features', DATEADD('DAY', 5, CURRENT_TIMESTAMP), 2, 1 
+INSERT INTO tasks (account_id, details, deadline, status_id, priority_id, created_at, last_updated) 
+SELECT 2, 'Test new features', DATEADD('DAY', 5, CURRENT_TIMESTAMP), 2, 1, DATEADD('DAY', -3, CURRENT_TIMESTAMP), DATEADD('HOUR', -12, CURRENT_TIMESTAMP) 
 WHERE EXISTS (SELECT 1 FROM accounts WHERE account_id = 2) 
 AND NOT EXISTS (SELECT 1 FROM tasks WHERE account_id = 2 AND details = 'Test new features');

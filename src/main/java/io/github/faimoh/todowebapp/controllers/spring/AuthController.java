@@ -1,5 +1,8 @@
 package io.github.faimoh.todowebapp.controllers.spring;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.github.faimoh.todowebapp.service.AccountService;
 import io.github.faimoh.todowebapp.model.Account;
+import io.github.faimoh.todowebapp.model.AccountSession;
+import io.github.faimoh.todowebapp.service.AccountService;
+import io.github.faimoh.todowebapp.service.AccountSessionService;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -21,6 +26,9 @@ public class AuthController {
 
     @Autowired
     private AccountService accountService;
+    
+    @Autowired
+    private AccountSessionService accountSessionService;
 
     /**
      * Show login form
@@ -61,7 +69,28 @@ public class AuthController {
                 return "login";
             } else {
                 // Authentication successful
+                
+                // Get the most recent previous session for this account (before current login)
+                List<AccountSession> previousSessions = accountSessionService.getSessionsByAccountIDOrderByCreated(account.getAccountID());
+                AccountSession previousSession = null;
+                if (previousSessions != null && !previousSessions.isEmpty()) {
+                    // Get the most recent session (sessions are ordered by creation date desc)
+                    previousSession = previousSessions.get(0);
+                }
+                
+                // Create new session record
+                AccountSession newSession = new AccountSession();
+                newSession.setSessionID(session.getId());
+                newSession.setAccountID(account.getAccountID());
+                newSession.setSessionCreated(new Timestamp(System.currentTimeMillis()));
+                newSession.setLastAccessed(new Timestamp(System.currentTimeMillis()));
+                
+                // Save the new session
+                accountSessionService.insertSession(newSession);
+                
+                // Store account and previous session info in HTTP session
                 session.setAttribute("account", account);
+                session.setAttribute("accountPreviousSession", previousSession);
                 
                 // Redirect based on account type
                 if (account.getAccountID().equals(1)) {
