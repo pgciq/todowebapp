@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
-    id 'war'
 }
 
 group = 'io.github.faimoh'
@@ -31,9 +30,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     
-    // For WAR deployment to external Tomcat
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    
     // Database drivers
     implementation 'mysql:mysql-connector-java:8.0.33'
     runtimeOnly 'com.h2database:h2:2.2.224'
@@ -47,31 +43,6 @@ test {
     useJUnitPlatform()
 }
 
-// Project now uses standard Maven/Gradle directory structure:
-// - src/main/java (Java sources)
-// - src/main/resources (Configuration files)
-// - src/main/webapp (Web content)
-// - src/test/java (Test sources)
-// - src/test/resources (Test resources)
-
-// Configure WAR task
-war {
-    archiveBaseName = 'todo'
-    archiveVersion = project.version
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-// Task to copy dependencies to WEB-INF/lib (similar to Ant CopyLibs)
-task copyLibs(type: Copy) {
-    from configurations.runtimeClasspath
-    into 'build/libs/WEB-INF/lib'
-    exclude '**/servlet-api*.jar'
-    exclude '**/jsp-api*.jar'
-}
-
-// Make war task depend on copyLibs
-war.dependsOn copyLibs
-
 // Custom task to display project information
 task info {
     description = 'Display project information'
@@ -81,95 +52,8 @@ task info {
         println "Version: ${version}"
         println "Java Version: ${java.sourceCompatibility}"
         println "Build Directory: ${buildDir}"
-        println "WAR File: todo-${version}.war"
-    }
-}
-
-// Custom deployment tasks for external Tomcat
-task deployToTomcat(type: Copy) {
-    description = 'Deploy WAR file to Tomcat webapps directory'
-    group = 'deployment'
-    
-    dependsOn war
-    
-    from war.archiveFile
-    into "${System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')}/webapps"
-    
-    // Remove version from WAR filename when deploying
-    rename { fileName ->
-        if (fileName.endsWith('.war')) {
-            return 'todo.war'
-        }
-        return fileName
-    }
-
-    doLast {
-        println "Deployed ${war.archiveFileName} as todo.war to Tomcat webapps directory"
-        println "Access the application at: http://localhost:8080/todo"
-    }
-}
-
-// Task to undeploy from Tomcat
-task undeployFromTomcat(type: Delete) {
-    description = 'Remove application from Tomcat webapps directory'
-    group = 'deployment'
-    
-    def tomcatHome = System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')
-    delete "${tomcatHome}/webapps/todo.war"
-    delete "${tomcatHome}/webapps/todo"
-    
-    doLast {
-        println "Removed todo from Tomcat webapps directory"
-    }
-}
-
-// Task to restart Tomcat (Windows)
-task restartTomcat {
-    description = 'Restart Tomcat service (Windows)'
-    group = 'deployment'
-    
-    doLast {
-        exec {
-            commandLine 'cmd', '/c', 'net stop Tomcat9 && net start Tomcat9'
-            ignoreExitValue = true
-        }
-        println "Tomcat service restarted"
-    }
-}
-
-// Combined deploy and restart task
-task redeployToTomcat {
-    description = 'Undeploy, deploy and restart Tomcat'
-    group = 'deployment'
-    
-    dependsOn undeployFromTomcat, deployToTomcat
-    
-    // Ensure proper task order
-    deployToTomcat.mustRunAfter undeployFromTomcat
-    
-    doLast {
-        println "Application redeployed successfully"
-        println "Access at: http://localhost:8080/todo"
-    }
-}
-
-// ============================================================================
-// ENVIRONMENT-SPECIFIC BUILD TASKS
-// ============================================================================
-
-// Task to build WAR for production with MySQL
-task warProd(type: War) {
-    archiveBaseName = 'todo-prod'
-    archiveVersion = project.version
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    
-    // Use production context.xml
-    from('src/main/webapp') {
-        exclude 'META-INF/context.xml'
-    }
-    from('src/main/webapp/META-INF/context-prod.xml') {
-        into 'META-INF'
-        rename { 'context.xml' }
+        println "Spring Boot Application (Embedded Tomcat)"
+        println "Access URL: http://localhost:8080/todo"
     }
 }
 
@@ -179,11 +63,11 @@ task setupDev {
     description = 'Configure application for development environment (H2 database)'
     doLast {
         println "✓ Configured for development environment (H2 database)"
-        println "  - H2 file-based database will be used"
+        println "  - H2 in-memory database will be used"
         println "  - Database will auto-initialize with sample data"
         println "  - Profile: dev (default)"
-        println "  - Run application with Spring profile 'dev'"
-        println "  - System property: -Dspring.profiles.active=dev"
+        println "  - Run application with: './gradlew bootRun'"
+        println "  - Access at: http://localhost:8080/todo"
     }
 }
 
@@ -197,8 +81,8 @@ task setupProd {
         println "  - Ensure MySQL is running and database 'todo' exists"
         println "  - Run database schema: src/main/resources/database/schema.sql"
         println "  - Profile: prod"
-        println "  - Run application with Spring profile 'prod'"
-        println "  - System property: -Dspring.profiles.active=prod"
+        println "  - Run application with: './gradlew bootRun -Dspring.profiles.active=prod'"
+        println "  - Access at: http://localhost:8080/todo"
     }
 }
 
@@ -207,7 +91,6 @@ task showConfig {
     group = 'Environment'
     description = 'Show current Spring profile configuration'
     doLast {
-        // Check both system property and environment variable
         def activeProfile = System.getProperty('spring.profiles.active') ?: 
                            System.getenv('SPRING_PROFILES_ACTIVE') ?: 'dev'
         println "Current Spring Profile: ${activeProfile}"
@@ -216,19 +99,19 @@ task showConfig {
             println "Current configuration: DEVELOPMENT (H2 In-Memory Database)"
             println "  - Database: In-memory H2"
             println "  - Auto-initialization: Enabled"
-            println "  - Location: memory"
+            println "  - Server: Embedded Tomcat"
         } else if (activeProfile == 'prod') {
             println "Current configuration: PRODUCTION (MySQL Database)" 
             println "  - Database: MySQL"
             println "  - Host: localhost:3306"
             println "  - Database: todo"
+            println "  - Server: Embedded Tomcat"
         } else {
             println "Current configuration: CUSTOM (${activeProfile})"
         }
         
         println "\nTo change profile:"
-        println "  - Set system property: -Dspring.profiles.active=<profile>"
-        println "  - Set environment variable: SPRING_PROFILES_ACTIVE=<profile>"
+        println "  - Run with: './gradlew bootRun -Dspring.profiles.active=<profile>'"
         println "  - Available profiles: dev, prod"
     }
 }
@@ -242,7 +125,6 @@ task testH2 (type: JavaExec) {
     mainClass = 'io.github.faimoh.todowebapp.H2DatabaseTest'
     classpath = sourceSets.test.runtimeClasspath + sourceSets.main.runtimeClasspath
     
-    // Add resources directory to classpath
     systemProperty 'user.dir', project.projectDir
 }
 
@@ -253,9 +135,9 @@ task dev {
     dependsOn setupDev
     doLast {
         println "Development environment configured!"
-        println "Next step: Run 'gradle bootRun' to start the Spring Boot server"
-        println "Server will be available at: http://localhost:8080"
-        println "Using H2 in-memory database with sample data"
+        println "Next step: Run './gradlew bootRun' to start the Spring Boot server"
+        println "Server will be available at: http://localhost:8080/todo"
+        println "Using embedded Tomcat with H2 in-memory database"
     }
 }
 
