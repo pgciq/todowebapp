@@ -5,52 +5,43 @@ import java.sql.DatabaseMetaData;
 
 import javax.sql.DataSource;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Simple test class to verify basic database configuration without SpringApplicationContextHolder
+ * Spring Boot test for database configuration
  */
+@SpringBootTest
+@ActiveProfiles("test")
 public class SimpleDatabaseConfigTest {
 
+    @Autowired
+    private DataSource dataSource;
+
     @Test
-    public void testDataSourceDirectAccess() throws Exception {
-        // Create application context with dev profile
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        ConfigurableEnvironment env = context.getEnvironment();
-        env.setActiveProfiles("dev");
+    public void testDataSourceConfiguration() throws Exception {
+        assertNotNull(dataSource, "DataSource should be auto-configured by Spring Boot");
         
-        // Register only DatabaseConfig to avoid SpringApplicationContextHolder issues
-        context.register(DatabaseConfig.class);
-        context.refresh();
-        
-        try {
-            DataSource dataSource = context.getBean(DataSource.class);
-            assertNotNull("DataSource should be configured", dataSource);
+        try (Connection connection = dataSource.getConnection()) {
+            assertNotNull(connection, "Should be able to get a connection");
             
-            try (Connection connection = dataSource.getConnection()) {
-                assertNotNull("Should be able to get a connection", connection);
-                
-                DatabaseMetaData metaData = connection.getMetaData();
-                String databaseProductName = metaData.getDatabaseProductName();
-                String url = metaData.getURL();
-                
-                // For dev profile, should be H2 in-memory
-                assertTrue("Should be using H2 database in dev profile, but was: " + databaseProductName,
-                    databaseProductName.contains("H2"));
-                assertTrue("URL should contain h2:mem, but was: " + url,
-                    url.contains("h2:mem"));
-                
-                System.out.println("Simple DataSource Test Results:");
-                System.out.println("Database Product: " + databaseProductName);
-                System.out.println("Database URL: " + url);
-                System.out.println("Driver: " + metaData.getDriverName());
-            }
-        } finally {
-            context.close();
+            DatabaseMetaData metaData = connection.getMetaData();
+            String databaseProductName = metaData.getDatabaseProductName();
+            String url = metaData.getURL();
+            
+            // For dev profile, should be H2 in-memory
+            assertTrue(databaseProductName.contains("H2"),
+                "Should be using H2 database in dev profile, but was: " + databaseProductName);
+            assertTrue(url.contains("h2:mem"),
+                "URL should contain h2:mem, but was: " + url);
+            
+            System.out.println("Spring Boot DataSource Test Results:");
+            System.out.println("Database Product: " + databaseProductName);
+            System.out.println("Database URL: " + url);
+            System.out.println("Driver: " + metaData.getDriverName());
         }
     }
 }

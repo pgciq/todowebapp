@@ -1,56 +1,51 @@
 package io.github.faimoh.todowebapp.config;
 
-import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
-import static org.junit.Assert.*;
-
 /**
- * Debug test to check the actual database URL
+ * Debug test to check the actual database URL with Spring Boot
  */
+@SpringBootTest
+@ActiveProfiles("test")
 public class DebugDatabaseTest {
+
+    @Autowired
+    private DataSource dataSource;
 
     @Test
     public void debugDatabaseUrl() throws Exception {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        ConfigurableEnvironment env = context.getEnvironment();
-        env.setActiveProfiles("dev");
+        assertNotNull(dataSource, "DataSource should be auto-configured");
         
-        context.register(DatabaseConfig.class);
-        context.refresh();
-        
-        try {
-            DataSource dataSource = context.getBean(DataSource.class);
-            try (Connection connection = dataSource.getConnection()) {
-                DatabaseMetaData metaData = connection.getMetaData();
-                String url = metaData.getURL();
-                
-                System.out.println("=== DEBUG DATABASE INFO ===");
-                System.out.println("Actual Database URL: " + url);
-                System.out.println("Database Product: " + metaData.getDatabaseProductName());
-                System.out.println("Driver: " + metaData.getDriverName());
-                System.out.println("=========================");
-                
-                // Use assertion to show the URL in case of failure
-                if (url.contains("jdbc:h2:mem")) {
-                    System.out.println("SUCCESS: Using in-memory H2");
-                } else if (url.contains("jdbc:h2:file")) {
-                    System.out.println("WARNING: Still using file-based H2");
-                } else {
-                    System.out.println("UNKNOWN: Different database type");
-                }
-                
-                // Fail with detailed information
-                assertTrue("Expected URL to contain 'jdbc:h2:mem' but was: " + url, 
-                    url.contains("jdbc:h2:mem"));
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            String url = metaData.getURL();
+            
+            System.out.println("=== DEBUG DATABASE INFO ===");
+            System.out.println("Actual Database URL: " + url);
+            System.out.println("Database Product: " + metaData.getDatabaseProductName());
+            System.out.println("Driver: " + metaData.getDriverName());
+            System.out.println("=========================");
+            
+            // Use assertion to show the URL in case of failure
+            if (url.contains("jdbc:h2:mem")) {
+                System.out.println("SUCCESS: Using in-memory H2");
+            } else if (url.contains("jdbc:h2:file")) {
+                System.out.println("WARNING: Still using file-based H2");
+            } else {
+                System.out.println("UNKNOWN: Different database type");
             }
-        } finally {
-            context.close();
+            
+            // Fail with detailed information
+            assertTrue(url.contains("jdbc:h2:mem"),
+                "Expected URL to contain 'jdbc:h2:mem' but was: " + url);
         }
     }
 }

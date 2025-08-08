@@ -1,33 +1,15 @@
 package io.github.faimoh.todowebapp.config;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 
 /**
- * Root Application Context Configuration
- * This configuration is shared across the entire application
- * and contains beans that are not web-specific (services, repositories, etc.)
+ * Root Application Context Configuration for Spring Boot
+ * Spring Boot automatically handles component scanning and configuration
+ * This class is kept for any custom application-wide configuration
  */
 @Configuration
-@Import(DatabaseConfig.class)
-@PropertySource({
-    "classpath:application.properties",
-    "classpath:application-${spring.profiles.active:dev}.properties"
-})
-@ComponentScan(basePackages = {
-    "io.github.faimoh.todowebapp.model",
-    "io.github.faimoh.todowebapp.service",
-    "io.github.faimoh.todowebapp.repository",
-    "io.github.faimoh.todowebapp.config"
-})
 public class RootConfig {
     
-    // This configuration class can be extended to include:
-    // - Database configuration
-    // - Transaction management
-    // - Security configuration
-    // - Service layer beans
-    // - Repository beans
+    // Spring Boot automatically scans for components starting from the main application class
+    // Additional beans and configuration can be added here if needed
 }
