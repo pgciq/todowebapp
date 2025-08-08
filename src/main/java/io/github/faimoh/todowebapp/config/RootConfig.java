@@ -44,7 +44,6 @@ import org.springframework.context.annotation.PropertySource;
     "classpath:application-${spring.profiles.active:dev}.properties"
 })
 @ComponentScan(basePackages = {
-    "io.github.faimoh.todowebapp.dao",
     "io.github.faimoh.todowebapp.model",
     "io.github.faimoh.todowebapp.service",
     "io.github.faimoh.todowebapp.repository",
