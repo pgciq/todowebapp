@@ -28,18 +28,38 @@ package io.github.faimoh.todowebapp.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import jakarta.persistence.*;
+
 /**
- *
+ * Account entity representing user accounts in the todo application
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
+@Entity
+@Table(name = "accounts")
 public class Account implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "account_id")
     private Integer accountID;
+    
+    @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
+    
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
+    
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
+    
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
-    private Timestamp createdAt;    
+    
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp createdAt;
+    
+    @Column(name = "status_id", nullable = false)
     private Integer statusID;    
 
     public Account() {

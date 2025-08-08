@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'org.gretty' version '4.1.2'
 }
 
 group = 'io.github.faimoh'
@@ -36,6 +37,14 @@ dependencies {
     implementation 'org.springframework:spring-aop:6.0.11'
     implementation 'org.springframework:spring-aspects:6.0.11'
     implementation 'org.springframework:spring-jdbc:6.0.11'
+    implementation 'org.springframework:spring-orm:6.0.11'
+    
+    // Spring Data JPA with Hibernate
+    implementation 'org.springframework.data:spring-data-jpa:3.1.2'
+    implementation 'org.hibernate:hibernate-core:6.2.7.Final'
+    implementation 'org.hibernate:hibernate-entitymanager:5.6.15.Final'
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
     
     // Apache Commons DBCP2 for connection pooling
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
@@ -102,7 +111,7 @@ task deployToTomcat(type: Copy) {
     dependsOn war
     
     from war.archiveFile
-    into "${System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-11.0.9')}/webapps"
+    into "${System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')}/webapps"
     
     // Remove version from WAR filename when deploying
     rename { fileName ->
@@ -123,7 +132,7 @@ task undeployFromTomcat(type: Delete) {
     description = 'Remove application from Tomcat webapps directory'
     group = 'deployment'
     
-    def tomcatHome = System.getProperty('catalina.home', 'I:/dev/tools/apache-tomcat-11.0.9')
+    def tomcatHome = System.getProperty('catalina.home', 'C:/tools/apache-tomcat-11.0.9')
     delete "${tomcatHome}/webapps/todo.war"
     delete "${tomcatHome}/webapps/todo"
     
@@ -266,4 +275,27 @@ task dev {
         println "Server will be available at: http://localhost:8080/todo"
         println "Using H2 in-memory database with sample data"
     }
+}
+
+// Gretty embedded server configuration
+gretty {
+    servletContainer = 'tomcat10'
+    contextPath = '/todo'
+    httpPort = 8080
+    
+    // Enable hot reload for development
+    scanInterval = 1
+    reloadOnClassChange = true
+    reloadOnConfigChange = true
+    
+    // Development settings
+    debugPort = 5005
+    debugSuspend = false
+    
+    // JVM arguments for development
+    jvmArgs = [
+        '-Dspring.profiles.active=dev',
+        '-XX:+UseG1GC',
+        '-Xmx512m'
+    ]
 }

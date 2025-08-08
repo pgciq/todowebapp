@@ -25,26 +25,29 @@
  */
 package io.github.faimoh.todowebapp.controllers.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.github.faimoh.todowebapp.dao.AccountDAO;
-import io.github.faimoh.todowebapp.dao.DAOFactory;
-import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
+import io.github.faimoh.todowebapp.service.AccountService;
 import io.github.faimoh.todowebapp.model.Account;
 import jakarta.servlet.http.HttpSession;
 
 /**
  * Spring MVC Controller for Authentication
  * This controller handles login and logout operations using Spring WebMVC
+ * Updated to use Spring Data JPA Service layer instead of DAO pattern
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
 @Controller
 public class AuthController {
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * Show login form
@@ -58,6 +61,7 @@ public class AuthController {
     /**
      * Process login
      * Equivalent to LoginAction (POST)
+     * Updated to use AccountService instead of DAO pattern
      */
     @PostMapping("/login")
     public String login(@RequestParam String username,
@@ -71,9 +75,7 @@ public class AuthController {
                 return "login";
             }
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            AccountDAO accountDAO = daoFactory.getAccountDAO();
-            Account account = accountDAO.findAccount(username);
+            Account account = accountService.findByUsername(username);
 
             if (account == null) {
                 model.addAttribute("message", "Account doesn't exist.");

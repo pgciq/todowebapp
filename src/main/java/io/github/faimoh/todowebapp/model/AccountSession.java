@@ -28,16 +28,33 @@ package io.github.faimoh.todowebapp.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import jakarta.persistence.*;
+
 /**
- *
+ * AccountSession entity representing user session tracking
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
-public class AccountSession {
+@Entity
+@Table(name = "account_sessions")
+public class AccountSession implements Serializable {
 
+    @Id
+    @Column(name = "session_id", length = 100)
     private String sessionID;
+    
+    @Column(name = "account_id", nullable = false)
     private int accountID;
+    
+    @Column(name = "session_created")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp sessionCreated;
+    
+    @Column(name = "last_accessed")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp lastAccessed;
+    
+    @Column(name = "session_end")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp sessionEnd;
 
     public AccountSession() {

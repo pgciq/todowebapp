@@ -27,19 +27,43 @@ package io.github.faimoh.todowebapp.model;
 
 import java.sql.Timestamp;
 
+import jakarta.persistence.*;
+
 /**
- *
+ * Task entity representing todo tasks in the application
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
+@Entity
+@Table(name = "tasks")
 public class Task {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id")
     private Integer taskID;
+    
+    @Column(name = "account_id", nullable = false)
     private Integer accountID;
+    
+    @Column(name = "details", nullable = false, length = 1000)
     private String details;
+    
+    @Column(name = "status_id", nullable = false)
     private Integer statusID;
+    
+    @Column(name = "priority_id", nullable = false)
     private Integer priorityID;
+    
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
+    
+    @Column(name = "deadline")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp deadline;
+    
+    @Column(name = "last_updated")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp lastUpdated;
 
     public Task() {

@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS account_sessions (
     session_id VARCHAR(255) PRIMARY KEY,
     account_id INT NOT NULL,
     session_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_accessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     session_end TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
 );

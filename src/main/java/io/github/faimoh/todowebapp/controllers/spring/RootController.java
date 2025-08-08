@@ -23,39 +23,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package io.github.faimoh.todowebapp.config;
+package io.github.faimoh.todowebapp.controllers.spring;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import io.github.faimoh.todowebapp.model.Account;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * Root Application Context Configuration
- * This configuration is shared across the entire application
- * and contains beans that are not web-specific (services, repositories, etc.)
+ * Root Controller for Todo Web Application
+ * Handles the main entry point and routing for the application
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
-@Configuration
-@Import(DatabaseConfig.class)
-@PropertySource({
-    "classpath:application.properties",
-    "classpath:application-${spring.profiles.active:dev}.properties"
-})
-@ComponentScan(basePackages = {
-    "io.github.faimoh.todowebapp.dao",
-    "io.github.faimoh.todowebapp.model",
-    "io.github.faimoh.todowebapp.service",
-    "io.github.faimoh.todowebapp.repository",
-    "io.github.faimoh.todowebapp.config"
-})
-public class RootConfig {
+@Controller
+public class RootController {
+
+    /**
+     * Application root - redirect to appropriate dashboard based on authentication
+     */
+    @GetMapping("/")
+    public String home(HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        
+        if (account == null) {
+            // Not logged in - redirect to login page
+            return "redirect:/login";
+        } else if (account.getAccountID().equals(1)) {
+            // Admin user - redirect to admin dashboard
+            return "redirect:/admin/accounts/dashboard";
+        } else {
+            // Regular user - redirect to tasks dashboard
+            return "redirect:/tasks/dashboard";
+        }
+    }
     
-    // This configuration class can be extended to include:
-    // - Database configuration
-    // - Transaction management
-    // - Security configuration
-    // - Service layer beans
-    // - Repository beans
+    /**
+     * Index page mapping
+     */
+    @GetMapping("/index")
+    public String index(HttpSession session) {
+        return home(session);
+    }
 }

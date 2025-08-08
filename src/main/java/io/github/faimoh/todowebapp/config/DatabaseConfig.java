@@ -33,15 +33,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import jakarta.persistence.EntityManagerFactory;
+import java.util.Properties;
 
 /**
- * Database Configuration
+ * Database Configuration with JPA Support
  * Replaces traditional context.xml JNDI DataSource configuration
  * Supports multiple profiles: dev (H2), prod (MySQL)
+ * Now includes Spring Data JPA configuration
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
 @Configuration
+@EnableJpaRepositories(basePackages = "io.github.faimoh.todowebapp.repository")
+@EnableTransactionManagement
 @PropertySource("classpath:application.properties")
 @PropertySource(value = "classpath:application-${spring.profiles.active:dev}.properties", 
                 ignoreResourceNotFound = true)
@@ -141,5 +152,50 @@ public class DatabaseConfig {
         dataSource.setLogAbandoned(logAbandoned);
         dataSource.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
         dataSource.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+    }
+    
+    /**
+     * Configure JPA EntityManagerFactory
+     * Uses Hibernate as JPA provider
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setDataSource(dataSource());
+        factory.setPackagesToScan("io.github.faimoh.todowebapp.model");
+        
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        
+        Properties jpaProperties = new Properties();
+        jpaProperties.put("hibernate.dialect", getDialectForActiveProfile());
+        jpaProperties.put("hibernate.hbm2ddl.auto", "update");
+        jpaProperties.put("hibernate.show_sql", "false");
+        jpaProperties.put("hibernate.format_sql", "true");
+        factory.setJpaProperties(jpaProperties);
+        
+        return factory;
+    }
+    
+    /**
+     * Configure JPA Transaction Manager
+     */
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
+    }
+    
+    /**
+     * Get Hibernate dialect based on active profile
+     */
+    private String getDialectForActiveProfile() {
+        // Default to H2 dialect, override for MySQL in production
+        if (driverClassName.contains("mysql")) {
+            return "org.hibernate.dialect.MySQLDialect";
+        } else {
+            return "org.hibernate.dialect.H2Dialect";
+        }
     }
 }

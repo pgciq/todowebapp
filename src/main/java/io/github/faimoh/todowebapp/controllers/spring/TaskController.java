@@ -26,8 +26,9 @@
 package io.github.faimoh.todowebapp.controllers.spring;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.github.faimoh.todowebapp.dao.DAOFactory;
-import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
-import io.github.faimoh.todowebapp.dao.TaskDAO;
+import io.github.faimoh.todowebapp.service.TaskService;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.Task;
 import io.github.faimoh.todowebapp.util.Utilities;
@@ -47,7 +46,7 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Spring MVC Controller for Task Management
  * This controller handles all task-related operations using Spring WebMVC
- * instead of the traditional action-based approach
+ * Updated to use Spring Data JPA Service layer instead of DAO pattern
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
@@ -55,9 +54,13 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/tasks")
 public class TaskController {
 
+    @Autowired
+    private TaskService taskService;
+
     /**
      * Display tasks dashboard
      * Equivalent to UserTasksDashboardAction
+     * Updated to use TaskService instead of DAO pattern
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
@@ -67,9 +70,7 @@ public class TaskController {
                 return "redirect:/login";
             }
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            TaskDAO taskDAO = daoFactory.getTaskDAO();
-            ArrayList<Task> tasksList = taskDAO.getAllTasks(sessionUser);
+            List<Task> tasksList = taskService.getAllTasks(sessionUser);
 
             model.addAttribute("tasksList", tasksList);
             return "tasks/dashboard";
@@ -125,9 +126,7 @@ public class TaskController {
             task.setPriorityID(priority);
             task.setStatusID(1); // Default status: Pending
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            TaskDAO taskDAO = daoFactory.getTaskDAO();
-            boolean isTaskCreated = taskDAO.insertTask(task);
+            boolean isTaskCreated = taskService.insertTask(task);
 
             if (isTaskCreated) {
                 redirectAttributes.addFlashAttribute("message", "Task created successfully!");
@@ -155,9 +154,7 @@ public class TaskController {
                 return "redirect:/login";
             }
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            TaskDAO taskDAO = daoFactory.getTaskDAO();
-            Task task = taskDAO.findTask(id);
+            Task task = taskService.findTask(id);
 
             if (task == null) {
                 model.addAttribute("message", "No such task exists.");
@@ -203,9 +200,7 @@ public class TaskController {
             }
 
             // Get and update task
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            TaskDAO taskDAO = daoFactory.getTaskDAO();
-            Task task = taskDAO.findTask(taskID);
+            Task task = taskService.findTask(taskID);
             
             if (task == null) {
                 redirectAttributes.addFlashAttribute("message", "Task not found.");
@@ -221,7 +216,7 @@ public class TaskController {
                     task.setStatusID(statusID);
                 }
                 
-                boolean isTaskUpdated = taskDAO.updateTask(task);
+                boolean isTaskUpdated = taskService.updateTask(task);
                 if (isTaskUpdated) {
                     redirectAttributes.addFlashAttribute("message", "Task updated successfully!");
                 } else {
