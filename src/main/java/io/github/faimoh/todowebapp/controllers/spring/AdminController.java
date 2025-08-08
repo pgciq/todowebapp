@@ -25,8 +25,9 @@
  */
 package io.github.faimoh.todowebapp.controllers.spring;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.github.faimoh.todowebapp.dao.AccountDAO;
-import io.github.faimoh.todowebapp.dao.DAOFactory;
-import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
+import io.github.faimoh.todowebapp.service.AccountService;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.util.Utilities;
 import jakarta.servlet.http.HttpSession;
@@ -45,13 +44,16 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Spring MVC Controller for Admin Account Management
  * This controller handles all admin operations for account management using Spring WebMVC
- * instead of the traditional action-based approach
+ * Updated to use Spring Data JPA Service layer instead of DAO pattern
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * Check if the current user is an admin
@@ -73,9 +75,7 @@ public class AdminController {
                 return "redirect:/login";
             }
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            AccountDAO accountDAO = daoFactory.getAccountDAO();
-            ArrayList<Account> accountsList = accountDAO.getAllAccounts();
+            List<Account> accountsList = accountService.getAllAccounts();
 
             model.addAttribute("accountsList", accountsList);
             return "admin/accounts/dashboard";
@@ -131,9 +131,7 @@ public class AdminController {
             }
 
             // Check if username already exists
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            AccountDAO accountDAO = daoFactory.getAccountDAO();
-            Account existingAccount = accountDAO.findAccount(username);
+            Account existingAccount = accountService.findByUsername(username);
 
             if (existingAccount != null) {
                 message = "Username already exists. Try another.";
@@ -150,7 +148,7 @@ public class AdminController {
             newAccount.setFirstName(firstName);
             newAccount.setLastName(lastName);
 
-            boolean isAccountCreated = accountDAO.insertAccount(newAccount);
+            boolean isAccountCreated = accountService.createAccount(newAccount);
 
             if (isAccountCreated) {
                 message = "Successfully created a new account.<br> Create another account:";
@@ -189,9 +187,7 @@ public class AdminController {
             } else {
                 try {
                     int accountId = Integer.parseInt(id);
-                    DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-                    AccountDAO accountDAO = daoFactory.getAccountDAO();
-                    Account account = accountDAO.findAccount(accountId);
+                    Account account = accountService.findByAccountID(accountId);
 
                     if (account == null) {
                         message = "No such account exists.";
@@ -253,9 +249,7 @@ public class AdminController {
                 return "admin/accounts/updateAccountResult";
             }
 
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            AccountDAO accountDAO = daoFactory.getAccountDAO();
-            Account accountToUpdate = accountDAO.findAccount(username);
+            Account accountToUpdate = accountService.findByUsername(username);
 
             if (accountToUpdate == null) {
                 message = "Update failed - Account doesn't exist!";
@@ -276,7 +270,7 @@ public class AdminController {
 
             if (resetPassword) {
                 // Reset password functionality - use the method that handles both password reset and account update
-                isUpdated = accountDAO.updateAccount(accountToUpdate, true);
+                isUpdated = accountService.updateAccount(accountToUpdate, true);
                 if (isUpdated) {
                     message = "Account updated successfully! Password has been reset.";
                     // Update session if admin updated their own account
@@ -292,7 +286,7 @@ public class AdminController {
             } else if (password != null && !password.trim().isEmpty()) {
                 // Change password functionality
                 accountToUpdate.setPassword(password);
-                isUpdated = accountDAO.changePassword(accountToUpdate);
+                isUpdated = accountService.changePassword(accountToUpdate);
                 if (isUpdated) {
                     message = "Account updated successfully! Password has been changed.";
                     // Update session if admin updated their own account
@@ -307,7 +301,7 @@ public class AdminController {
                 }
             } else {
                 // Regular update without password change
-                isUpdated = accountDAO.updateAccount(accountToUpdate, false);
+                isUpdated = accountService.updateAccount(accountToUpdate, false);
                 if (isUpdated) {
                     message = "Account updated successfully!";
                     // Update session if admin updated their own account

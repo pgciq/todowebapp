@@ -25,6 +25,7 @@
  */
 package io.github.faimoh.todowebapp.controllers.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,21 +34,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.github.faimoh.todowebapp.dao.AccountDAO;
-import io.github.faimoh.todowebapp.dao.DAOFactory;
-import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
+import io.github.faimoh.todowebapp.service.AccountService;
 import io.github.faimoh.todowebapp.model.Account;
 import jakarta.servlet.http.HttpSession;
 
 /**
  * Spring MVC Controller for User Profile Management
  * This controller handles user profile operations using Spring WebMVC
+ * Updated to use Spring Data JPA Service layer instead of DAO pattern
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
 @Controller
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * Show user profile
@@ -86,21 +89,15 @@ public class UserController {
             sessionUser.setLastName(lastName);
 
             // Save to database
-            DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
-            AccountDAO accountDAO = daoFactory.getAccountDAO();
-            
             boolean isAccountUpdated;
-            boolean isPasswordChanged;
             
             if (password == null || password.trim().isEmpty()) {
                 // Update only profile information (no password change)
-                isAccountUpdated = accountDAO.updateAccount(sessionUser);
+                isAccountUpdated = accountService.updateAccount(sessionUser);
             } else {
                 // Update profile and password
                 sessionUser.setPassword(password);
-                isPasswordChanged = accountDAO.changePassword(sessionUser);
-                isAccountUpdated = accountDAO.updateAccount(sessionUser);
-                isAccountUpdated = isPasswordChanged && isAccountUpdated;
+                isAccountUpdated = accountService.changePassword(sessionUser);
             }
 
             if (isAccountUpdated) {
