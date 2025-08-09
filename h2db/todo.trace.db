@@ -1,3 +1,0 @@
-2025-08-05 06:19:51.416624+08:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT_STATUS" not found; SQL statement:
-SELECT COUNT(*) FROM ACCOUNT_STATUS [42102-224]

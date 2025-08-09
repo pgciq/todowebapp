@@ -36,12 +36,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.github.faimoh.todowebapp.actions.Utilities;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
 import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.dao.TaskDAO;
 import io.github.faimoh.todowebapp.model.Account;
 import io.github.faimoh.todowebapp.model.Task;
+import io.github.faimoh.todowebapp.util.Utilities;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -114,7 +114,7 @@ public class TaskController {
             Timestamp deadline = Utilities.parseDateAndTime(date, time);
             if (deadline == null) {
                 redirectAttributes.addFlashAttribute("message", "Invalid date/time format.");
-                return "redirect:/spring/tasks/new";
+                return "redirect:/tasks/new";
             }
 
             // Create task
@@ -135,11 +135,11 @@ public class TaskController {
                 redirectAttributes.addFlashAttribute("message", "Technical error. Please try again later.");
             }
             
-            return "redirect:/spring/tasks/dashboard";
+            return "redirect:/tasks/dashboard";
         } catch (Exception e) {
             System.err.println("Error creating task: " + e.getMessage());
             redirectAttributes.addFlashAttribute("message", "Error creating task: " + e.getMessage());
-            return "redirect:/spring/tasks/new";
+            return "redirect:/tasks/new";
         }
     }
 
@@ -199,7 +199,7 @@ public class TaskController {
             Timestamp deadline = Utilities.parseDateAndTime(date, time);
             if (deadline == null) {
                 redirectAttributes.addFlashAttribute("message", "Invalid date/time format.");
-                return "redirect:/spring/tasks/details?id=" + taskID;
+                return "redirect:/tasks/details?id=" + taskID;
             }
 
             // Get and update task
@@ -209,10 +209,10 @@ public class TaskController {
             
             if (task == null) {
                 redirectAttributes.addFlashAttribute("message", "Task not found.");
-                return "redirect:/spring/tasks/dashboard";
+                return "redirect:/tasks/dashboard";
             } else if (sessionUser.getAccountID().intValue() != task.getAccountID().intValue()) {
                 redirectAttributes.addFlashAttribute("message", "Forbidden. You are not allowed to modify others' task.");
-                return "redirect:/spring/tasks/dashboard";
+                return "redirect:/tasks/dashboard";
             } else {
                 task.setDetails(details);
                 task.setDeadline(deadline);
@@ -229,11 +229,11 @@ public class TaskController {
                 }
             }
 
-            return "redirect:/spring/tasks/dashboard";
+            return "redirect:/tasks/dashboard";
         } catch (Exception e) {
             System.err.println("Error updating task: " + e.getMessage());
             redirectAttributes.addFlashAttribute("message", "Error updating task: " + e.getMessage());
-            return "redirect:/spring/tasks/details?id=" + taskID;
+            return "redirect:/tasks/details?id=" + taskID;
         }
     }
 }

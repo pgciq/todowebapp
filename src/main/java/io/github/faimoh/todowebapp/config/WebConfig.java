@@ -32,6 +32,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -74,5 +75,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/js/");
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("/images/");
+    }
+    
+    /**
+     * Configure welcome files
+     * Equivalent to <welcome-file-list> in web.xml
+     */
+    @Override
+    public void addViewControllers(@NonNull ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:/login");
     }
 }

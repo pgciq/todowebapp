@@ -91,10 +91,10 @@ public class AuthController {
                 // Redirect based on account type
                 if (account.getAccountID().equals(1)) {
                     // Admin user
-                    return "redirect:/spring/admin/accounts/dashboard";
+                    return "redirect:/admin/accounts/dashboard";
                 } else {
                     // Regular user
-                    return "redirect:/spring/tasks/dashboard";
+                    return "redirect:/tasks/dashboard";
                 }
             }
         } catch (Exception e) {
@@ -113,6 +113,6 @@ public class AuthController {
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:/spring/login";
+        return "redirect:/login";
     }
 }

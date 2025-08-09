@@ -18,41 +18,21 @@
         
         <c:choose>
             <c:when test="${sessionScope.account.accountID==1}">                
-                <!-- Admin Navigation - Traditional Servlet System -->
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                    <h3>Traditional Servlet Navigation</h3>
-                    <a href="<c:url value="/app/admin/accounts/dashboard"/>">Dashboard</a> |
-                    <a href="<c:url value="/app/admin/accounts/new"/>">New Account</a> |
-                    <a href="<c:url value="/app/users/profile"/>">My Profile</a> |
-                    <a href="<c:url value="/app/logout"/>">Logout</a>
-                </div>
-                
-                <!-- Admin Navigation - Spring WebMVC System -->
+                <!-- Admin Navigation -->
                 <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-                    <h3>Spring WebMVC Navigation</h3>
-                    <a href="<c:url value="/spring/admin/accounts/dashboard"/>">Dashboard (Spring)</a> |
-                    <a href="<c:url value="/spring/admin/accounts/new"/>">New Account (Spring)</a> |
-                    <a href="<c:url value="/spring/users/profile"/>">My Profile (Spring)</a> |
-                    <a href="<c:url value="/spring/logout"/>">Logout (Spring)</a>
+                    <a href="<c:url value="/admin/accounts/dashboard"/>">Dashboard</a> |
+                    <a href="<c:url value="/admin/accounts/new"/>">New Account</a> |
+                    <a href="<c:url value="/users/profile"/>">My Profile</a> |
+                    <a href="<c:url value="/logout"/>">Logout</a>
                 </div>
             </c:when>
             <c:otherwise>
-                <!-- User Navigation - Traditional Servlet System -->
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                    <h3>Traditional Servlet Navigation</h3>
-                    <a href="<c:url value="/app/tasks/dashboard"/>">Dashboard</a> |
-                    <a href="<c:url value="/app/tasks/new"/>">New Task</a> |
-                    <a href="<c:url value="/app/users/profile"/>">My Profile</a> |
-                    <a href="<c:url value="/app/logout"/>">Logout</a>
-                </div>
-                
-                <!-- User Navigation - Spring WebMVC System -->
+                <!-- User Navigation -->
                 <div style="border: 1px solid #4CAF50; padding: 10px; margin-bottom: 10px;">
-                    <h3>Spring WebMVC Navigation</h3>
-                    <a href="<c:url value="/spring/tasks/dashboard"/>">Dashboard (Spring)</a> |
-                    <a href="<c:url value="/spring/tasks/new"/>">New Task (Spring)</a> |
-                    <a href="<c:url value="/spring/users/profile"/>">My Profile (Spring)</a> |
-                    <a href="<c:url value="/spring/logout"/>">Logout (Spring)</a>
+                    <a href="<c:url value="/tasks/dashboard"/>">Dashboard</a> |
+                    <a href="<c:url value="/tasks/new"/>">New Task</a> |
+                    <a href="<c:url value="/users/profile"/>">My Profile</a> |
+                    <a href="<c:url value="/logout"/>">Logout</a>
                 </div>
             </c:otherwise>
         </c:choose>        

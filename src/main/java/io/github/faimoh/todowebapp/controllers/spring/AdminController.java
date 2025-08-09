@@ -35,11 +35,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import io.github.faimoh.todowebapp.actions.Utilities;
 import io.github.faimoh.todowebapp.dao.AccountDAO;
 import io.github.faimoh.todowebapp.dao.DAOFactory;
 import io.github.faimoh.todowebapp.dao.DatabaseConfigurationManager;
 import io.github.faimoh.todowebapp.model.Account;
+import io.github.faimoh.todowebapp.util.Utilities;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -70,7 +70,7 @@ public class AdminController {
     public String accountsDashboard(Model model, HttpSession session) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             DAOFactory daoFactory = DatabaseConfigurationManager.getDAOFactory();
@@ -93,7 +93,7 @@ public class AdminController {
     @GetMapping("/accounts/new")
     public String newAccountForm(Model model, HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/spring/login";
+            return "redirect:/login";
         }
         return "admin/accounts/newAccount";
     }
@@ -110,7 +110,7 @@ public class AdminController {
                               Model model) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             // Validate input parameters
@@ -178,7 +178,7 @@ public class AdminController {
                                HttpSession session) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             String message = "";
@@ -230,7 +230,7 @@ public class AdminController {
                               RedirectAttributes redirectAttributes) {
         try {
             if (!isAdmin(session)) {
-                return "redirect:/spring/login";
+                return "redirect:/login";
             }
 
             String message = "";
@@ -340,9 +340,9 @@ public class AdminController {
     @GetMapping("/")
     public String adminHome(HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/spring/login";
+            return "redirect:/login";
         }
-        return "redirect:/spring/admin/accounts/dashboard";
+        return "redirect:/admin/accounts/dashboard";
     }
 
     /**

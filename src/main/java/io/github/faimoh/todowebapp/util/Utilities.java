@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Faisal Ahmed Pasha Mohammed https://github.com/faimoh
+ * Copyright (c) 2020, Faisal Ahmed Pasha Mohammed
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,38 +23,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package io.github.faimoh.todowebapp.controllers.spring;
+package io.github.faimoh.todowebapp.util;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Spring MVC Home Controller
- * Provides navigation between old servlet system and new Spring WebMVC system
+ * Utility helper methods for the Spring WebMVC controllers
  * 
  * @author Faisal Ahmed Pasha Mohammed https://github.com/faimoh
  */
-@Controller
-public class HomeController {
-
+public class Utilities {
+    
     /**
-     * Show home page with navigation options
+     * Parse date and time strings into a Timestamp
+     * @param date Date string in yyyy-MM-dd format
+     * @param time Time string in HH:mm:ss format
+     * @return Combined Timestamp or null if parsing fails
      */
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("message", "Welcome to Todo Web Application");
-        return "spring/home";
+    public static Timestamp parseDateAndTime(String date, String time) {
+        try {
+            String dateTimeString = date + " " + time;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parsedDate = format.parse(dateTimeString);
+            return new Timestamp(parsedDate.getTime());
+        } catch (ParseException e) {
+            System.err.println("Error parsing date/time: " + e.getMessage());
+            return null;
+        }
     }
-
+    
     /**
-     * Spring WebMVC demo page
+     * Parse request parameter with default value
+     * @param value The parameter value to parse
+     * @param defaultValue Default value if parameter is null or empty
+     * @return Parsed value or default
      */
-    @GetMapping("/demo")
-    public String demo(Model model) {
-        model.addAttribute("message", "Spring WebMVC Demo");
-        model.addAttribute("description", 
-            "This demonstrates Spring WebMVC controllers working alongside the traditional servlet-based system.");
-        return "spring/demo";
+    public static String parseRequestParameterWithDefault(String value, String defaultValue) {
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return value.trim();
     }
 }
